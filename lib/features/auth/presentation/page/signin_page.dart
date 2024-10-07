@@ -2,6 +2,7 @@ import 'package:ecomerce/common/helper/navigator/app_navigator.dart';
 import 'package:ecomerce/common/widget/appbar/app_bar.dart';
 import 'package:ecomerce/common/widget/button/basic_app_button.dart';
 import 'package:ecomerce/features/auth/presentation/page/enter_password_page.dart';
+import 'package:ecomerce/features/auth/presentation/page/signup_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -77,7 +78,7 @@ class SigninPage extends StatelessWidget {
           text: 'Create Account',
           recognizer: TapGestureRecognizer()
             ..onTap = () {
-              // Navigate to the create account page
+              AppNavigator.push(context, SignupPage());
             },
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),

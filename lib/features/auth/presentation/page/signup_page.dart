@@ -3,6 +3,7 @@ import 'package:ecomerce/common/widget/appbar/app_bar.dart';
 import 'package:ecomerce/common/widget/button/basic_app_button.dart';
 import 'package:ecomerce/features/auth/presentation/page/enter_password_page.dart';
 import 'package:ecomerce/features/auth/presentation/page/forgot_page.dart';
+import 'package:ecomerce/features/auth/presentation/page/signin_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -109,18 +110,18 @@ class SignupPage extends StatelessWidget {
         text: TextSpan(
       children: [
         const TextSpan(
-          text: 'Forget Password? ',
+          text: 'Do you have an account? ',
           style: TextStyle(
             color: Colors.blue,
             fontSize: 16,
           ),
         ),
         TextSpan(
-          text: 'Reset',
+          text: 'Sign in',
           recognizer: TapGestureRecognizer()
             ..onTap = () {
               // Navigate to the create account page
-              AppNavigator.push(context, const ForgotPage());
+              AppNavigator.push(context, const SigninPage());
             },
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),

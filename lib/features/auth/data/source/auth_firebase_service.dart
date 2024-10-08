@@ -5,14 +5,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 abstract class AuthFirebaseService {
-  Future<Either> signup(SigninModel userModel);
+  Future<Either> signup(UserCredentialRequestModel userModel);
+  Future<Either> getAges();
 }
 
 class AuthFirebaseServiceImpl implements AuthFirebaseService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
-  Future<Either> signup(SigninModel userModel) async {
+  Future<Either> signup(UserCredentialRequestModel userModel) async {
     try {
       var data = await _firebaseAuth.createUserWithEmailAndPassword(
         email: userModel.email!,
@@ -40,6 +41,16 @@ class AuthFirebaseServiceImpl implements AuthFirebaseService {
         message = 'The account already exists for that email.';
       }
       return Left(message);
+    }
+  }
+
+  @override
+  Future<Either> getAges() async {
+    try {
+      var data = await FirebaseFirestore.instance.collection('Ages').get();
+      return Right(data.docs);
+    } catch (e) {
+      return Left(e.toString());
     }
   }
 }

@@ -1,9 +1,11 @@
 import 'package:ecomerce/common/helper/navigator/app_navigator.dart';
 import 'package:ecomerce/common/widget/appbar/app_bar.dart';
 import 'package:ecomerce/common/widget/button/basic_app_button.dart';
-import 'package:ecomerce/features/auth/presentation/page/enter_password_page.dart';
-import 'package:ecomerce/features/auth/presentation/page/forgot_page.dart';
+import 'package:ecomerce/features/auth/data/models/signin_model.dart';
+
+import 'package:ecomerce/features/auth/presentation/page/gender_page.dart';
 import 'package:ecomerce/features/auth/presentation/page/signin_page.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -99,7 +101,16 @@ class SignupPage extends StatelessWidget {
   Widget _continueButton(BuildContext context) {
     return BasicAppButton(
       onPressed: () {
-        AppNavigator.push(context, const EnterPasswordPage());
+        AppNavigator.push(
+            context,
+            GenderAndAgeSelectionPage(
+              userCreationReq: UserCredentialRequestModel(
+                firstName: _firstNameCon.text,
+                lastName: _lastNameCon.text,
+                email: _emailCon.text,
+                password: _passwordCon.text,
+              ),
+            ));
       },
       title: 'Continue',
     );

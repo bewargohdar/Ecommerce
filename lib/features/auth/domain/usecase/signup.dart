@@ -4,9 +4,9 @@ import 'package:ecomerce/features/auth/data/models/signin_model.dart';
 import 'package:ecomerce/features/auth/domain/repository/auth_repository.dart';
 import 'package:ecomerce/service_locator.dart';
 
-class SignupUsecase implements Usecase<Either, SigninModel> {
+class SignupUsecase implements Usecase<Either, UserCredentialRequestModel> {
   @override
-  Future<Either> call(SigninModel params) async {
+  Future<Either> call(UserCredentialRequestModel params) async {
     return await sl<AuthRepository>().signup(params);
   }
 }

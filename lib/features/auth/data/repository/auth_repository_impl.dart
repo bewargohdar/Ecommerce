@@ -7,7 +7,12 @@ import 'package:ecomerce/service_locator.dart';
 class AuthRepositoryImpl implements AuthRepository {
   late final AuthFirebaseService authFirebaseService;
   @override
-  Future<Either> signup(SigninModel userModel) async {
+  Future<Either> signup(UserCredentialRequestModel userModel) async {
     return await sl<AuthFirebaseService>().signup(userModel);
+  }
+
+  @override
+  Future<Either> getAges() {
+    return sl<AuthFirebaseService>().getAges();
   }
 }

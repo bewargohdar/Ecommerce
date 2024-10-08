@@ -3,6 +3,7 @@ import 'package:ecomerce/features/splash/bloc/splash_bloc.dart';
 import 'package:ecomerce/features/splash/bloc/splash_state.dart';
 import 'package:ecomerce/features/splash/page/splash.dart';
 import 'package:ecomerce/firebase_options.dart';
+import 'package:ecomerce/service_locator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +15,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await initializeDependencies();
   runApp(const MyApp());
 }
 

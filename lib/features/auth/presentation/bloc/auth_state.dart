@@ -38,3 +38,6 @@ class GenderSelectionState extends AuthState {
   final int selectedGender;
   GenderSelectionState(this.selectedGender);
 }
+
+//states for sign in
+class SignInLoading extends AuthState {}

@@ -1,12 +1,20 @@
 import 'package:ecomerce/common/helper/navigator/app_navigator.dart';
 import 'package:ecomerce/common/widget/appbar/app_bar.dart';
 import 'package:ecomerce/common/widget/button/basic_app_button.dart';
+import 'package:ecomerce/common/widget/button/basic_reactive_button.dart';
+import 'package:ecomerce/features/auth/data/models/signin_user_req.dart';
+import 'package:ecomerce/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:ecomerce/features/auth/presentation/bloc/auth_event.dart';
+import 'package:ecomerce/features/auth/presentation/bloc/auth_state.dart';
 import 'package:ecomerce/features/auth/presentation/page/forgot_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EnterPasswordPage extends StatelessWidget {
-  const EnterPasswordPage({super.key});
+  final SigninUserReq signinUserReq;
+  EnterPasswordPage({super.key, required this.signinUserReq});
+  final TextEditingController _passwordCon = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -17,17 +25,32 @@ class EnterPasswordPage extends StatelessWidget {
           horizontal: 16,
           vertical: 40,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _enterPassword(context),
-            const SizedBox(height: 20),
-            _passwordFiled(context),
-            const SizedBox(height: 20),
-            _continueButton(),
-            const SizedBox(height: 20),
-            _forgetPassword(context),
-          ],
+        child: BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is ButtonFailureState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.errorMessage),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            }
+            if (state is ButtonSuccessState) {
+              AppNavigator.pushAndRemove(context, const Scaffold());
+            }
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _enterPassword(context),
+              const SizedBox(height: 20),
+              _passwordFiled(context),
+              const SizedBox(height: 20),
+              _continueButton(context),
+              const SizedBox(height: 20),
+              _forgetPassword(context),
+            ],
+          ),
         ),
       ),
     );
@@ -44,16 +67,20 @@ class EnterPasswordPage extends StatelessWidget {
   }
 
   Widget _passwordFiled(BuildContext context) {
-    return const TextField(
-      decoration: InputDecoration(
+    return TextField(
+      controller: _passwordCon,
+      decoration: const InputDecoration(
         hintText: 'Password',
       ),
     );
   }
 
-  Widget _continueButton() {
-    return BasicAppButton(
-      onPressed: () {},
+  Widget _continueButton(BuildContext context) {
+    return BasicReactiveButton(
+      onPressed: () {
+        signinUserReq.password = _passwordCon.text;
+        BlocProvider.of<AuthBloc>(context).add(SignInEvent(signinUserReq));
+      },
       title: 'Continue',
     );
   }
@@ -74,7 +101,7 @@ class EnterPasswordPage extends StatelessWidget {
           recognizer: TapGestureRecognizer()
             ..onTap = () {
               // Navigate to the create account page
-              AppNavigator.push(context, const ForgotPage());
+              AppNavigator.push(context, ForgotPage());
             },
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),

@@ -16,7 +16,7 @@ class Splash extends StatelessWidget {
       listener: (context, state) {
         if (state is Authenticated) {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => const SigninPage(),
+            builder: (context) => SigninPage(),
           ));
         }
       },

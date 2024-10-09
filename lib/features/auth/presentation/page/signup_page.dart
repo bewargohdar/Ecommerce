@@ -1,7 +1,7 @@
 import 'package:ecomerce/common/helper/navigator/app_navigator.dart';
 import 'package:ecomerce/common/widget/appbar/app_bar.dart';
 import 'package:ecomerce/common/widget/button/basic_app_button.dart';
-import 'package:ecomerce/features/auth/data/models/signin_model.dart';
+import 'package:ecomerce/features/auth/data/models/signup_model.dart';
 
 import 'package:ecomerce/features/auth/presentation/page/gender_page.dart';
 import 'package:ecomerce/features/auth/presentation/page/signin_page.dart';
@@ -132,7 +132,7 @@ class SignupPage extends StatelessWidget {
           recognizer: TapGestureRecognizer()
             ..onTap = () {
               // Navigate to the create account page
-              AppNavigator.push(context, const SigninPage());
+              AppNavigator.push(context, SigninPage());
             },
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),

@@ -2,7 +2,7 @@ import 'package:ecomerce/common/helper/appbuttonsheet/app_button_sheet.dart';
 import 'package:ecomerce/common/widget/appbar/app_bar.dart';
 import 'package:ecomerce/common/widget/button/basic_reactive_button.dart';
 import 'package:ecomerce/core/config/theme/app_color.dart';
-import 'package:ecomerce/features/auth/data/models/signin_model.dart';
+import 'package:ecomerce/features/auth/data/models/signup_model.dart';
 import 'package:ecomerce/features/auth/domain/usecase/signup.dart';
 import 'package:ecomerce/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ecomerce/features/auth/presentation/bloc/auth_event.dart';

@@ -4,17 +4,16 @@ import 'package:ecomerce/common/widget/button/basic_reactive_button.dart';
 import 'package:ecomerce/core/config/theme/app_color.dart';
 import 'package:ecomerce/features/auth/data/models/signin_model.dart';
 import 'package:ecomerce/features/auth/domain/usecase/signup.dart';
-
 import 'package:ecomerce/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ecomerce/features/auth/presentation/bloc/auth_event.dart';
 import 'package:ecomerce/features/auth/presentation/bloc/auth_state.dart';
-
 import 'package:ecomerce/features/auth/presentation/widgets/ages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GenderAndAgeSelectionPage extends StatelessWidget {
   final UserCredentialRequestModel userCreationReq;
+
   const GenderAndAgeSelectionPage({required this.userCreationReq, super.key});
 
   @override
@@ -24,11 +23,12 @@ class GenderAndAgeSelectionPage extends StatelessWidget {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is ButtonFailureState) {
-            var snackbar = SnackBar(
-              content: Text(state.errorMessage),
-              behavior: SnackBarBehavior.floating,
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.errorMessage),
+                behavior: SnackBarBehavior.floating,
+              ),
             );
-            ScaffoldMessenger.of(context).showSnackBar(snackbar);
           }
         },
         child: Column(
@@ -39,23 +39,17 @@ class GenderAndAgeSelectionPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _tellUs(),
-                  const SizedBox(
-                    height: 30,
-                  ),
+                  const SizedBox(height: 30),
                   _genders(context),
-                  const SizedBox(
-                    height: 30,
-                  ),
+                  const SizedBox(height: 30),
                   howOld(),
-                  const SizedBox(
-                    height: 30,
-                  ),
+                  const SizedBox(height: 30),
                   _age(context),
                 ],
               ),
             ),
             const Spacer(),
-            _finishButton(context)
+            _finishButton(context),
           ],
         ),
       ),
@@ -130,14 +124,13 @@ class GenderAndAgeSelectionPage extends StatelessWidget {
 
         return GestureDetector(
           onTap: () {
+            // Dispatch the FetchAges event here to load the age options
+            context.read<AuthBloc>().add(FetchAges());
+
             AppBottomsheet.display(
               context,
-              MultiBlocProvider(
-                providers: [
-                  BlocProvider.value(
-                    value: context.read<AuthBloc>(),
-                  ),
-                ],
+              BlocProvider.value(
+                value: context.read<AuthBloc>(),
                 child: const Ages(),
               ),
             );
@@ -170,23 +163,26 @@ class GenderAndAgeSelectionPage extends StatelessWidget {
       child: Center(
         child: Builder(builder: (context) {
           return BasicReactiveButton(
-              onPressed: () {
-                userCreationReq.gender = context.read<AuthBloc>().state
-                        is GenderSelectionState
-                    ? (context.read<AuthBloc>().state as GenderSelectionState)
-                        .selectedGender
-                    : 1; // Default to Men if not selected
+            onPressed: () {
+              userCreationReq.gender =
+                  context.read<AuthBloc>().state is GenderSelectionState
+                      ? (context.read<AuthBloc>().state as GenderSelectionState)
+                          .selectedGender
+                      : 1; // Default to Men if not selected
 
-                userCreationReq.age =
-                    context.read<AuthBloc>().state is AgeSelectionState
-                        ? (context.read<AuthBloc>().state as AgeSelectionState)
-                            .selectedAge
-                        : ''; // Default or placeholder
+              userCreationReq.age =
+                  context.read<AuthBloc>().state is AgeSelectionState
+                      ? (context.read<AuthBloc>().state as AgeSelectionState)
+                          .selectedAge
+                      : ''; // Default or placeholder
 
-                context.read<AuthBloc>().add(ExecuteUseCase(
-                    usecase: SignupUsecase(), params: userCreationReq));
-              },
-              title: 'Finish');
+              context.read<AuthBloc>().add(ExecuteUseCase(
+                    usecase: SignupUsecase(),
+                    params: userCreationReq,
+                  ));
+            },
+            title: 'Finish',
+          );
         }),
       ),
     );

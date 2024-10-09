@@ -1,4 +1,5 @@
 import 'package:ecomerce/core/config/theme/app_theme.dart';
+import 'package:ecomerce/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ecomerce/features/splash/bloc/splash_bloc.dart';
 import 'package:ecomerce/features/splash/bloc/splash_state.dart';
 import 'package:ecomerce/features/splash/page/splash.dart';
@@ -23,18 +24,17 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider<SplashBloc>(
-      create: (context) {
-        final splashBloc = SplashBloc();
-        splashBloc.add(AppStarted());
-        return splashBloc;
-      },
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.appTheme,
-        home: const Splash(),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => AuthBloc()),
+          BlocProvider(create: (context) => SplashBloc()),
+        ],
+        child: MaterialApp(
+            title: 'Ecomerce',
+            theme: AppTheme.appTheme,
+            home: BlocProvider(
+              create: (context) => SplashBloc()..add(AppStarted()),
+              child: const Splash(),
+            )),
+      );
 }

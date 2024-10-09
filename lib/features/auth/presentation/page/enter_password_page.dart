@@ -1,12 +1,13 @@
 import 'package:ecomerce/common/helper/navigator/app_navigator.dart';
 import 'package:ecomerce/common/widget/appbar/app_bar.dart';
-import 'package:ecomerce/common/widget/button/basic_app_button.dart';
 import 'package:ecomerce/common/widget/button/basic_reactive_button.dart';
 import 'package:ecomerce/features/auth/data/models/signin_user_req.dart';
+import 'package:ecomerce/features/auth/domain/usecase/signin.dart';
 import 'package:ecomerce/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ecomerce/features/auth/presentation/bloc/auth_event.dart';
 import 'package:ecomerce/features/auth/presentation/bloc/auth_state.dart';
 import 'package:ecomerce/features/auth/presentation/page/forgot_page.dart';
+import 'package:ecomerce/features/auth/presentation/page/password_reset_email.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +37,8 @@ class EnterPasswordPage extends StatelessWidget {
               );
             }
             if (state is ButtonSuccessState) {
-              AppNavigator.pushAndRemove(context, const Scaffold());
+              AppNavigator.pushAndRemove(
+                  context, const PasswordResetEmailPage());
             }
           },
           child: Column(
@@ -78,8 +80,22 @@ class EnterPasswordPage extends StatelessWidget {
   Widget _continueButton(BuildContext context) {
     return BasicReactiveButton(
       onPressed: () {
+        if (_passwordCon.text.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Password cannot be empty'),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+          return;
+        }
         signinUserReq.password = _passwordCon.text;
-        BlocProvider.of<AuthBloc>(context).add(SignInEvent(signinUserReq));
+        context.read<AuthBloc>().add(
+              ExecuteUseCase(
+                usecase: SigninUsecase(),
+                params: signinUserReq,
+              ),
+            );
       },
       title: 'Continue',
     );

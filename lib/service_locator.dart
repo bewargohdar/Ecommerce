@@ -2,6 +2,7 @@ import 'package:ecomerce/features/auth/data/repository/auth_repository_impl.dart
 import 'package:ecomerce/features/auth/data/source/auth_firebase_service.dart';
 import 'package:ecomerce/features/auth/domain/repository/auth_repository.dart';
 import 'package:ecomerce/features/auth/domain/usecase/get_ages.dart';
+import 'package:ecomerce/features/auth/domain/usecase/is_logged_in.dart';
 import 'package:ecomerce/features/auth/domain/usecase/send_password_reset.dart';
 import 'package:ecomerce/features/auth/domain/usecase/signin.dart';
 import 'package:ecomerce/features/auth/domain/usecase/signup.dart';
@@ -30,5 +31,8 @@ Future<void> initializeDependencies() async {
   );
   sl.registerLazySingleton<SendPasswordResetEmailUseCase>(
     () => SendPasswordResetEmailUseCase(),
+  );
+  sl.registerLazySingleton<IsLoggedInUseCase>(
+    () => IsLoggedInUseCase(),
   );
 }

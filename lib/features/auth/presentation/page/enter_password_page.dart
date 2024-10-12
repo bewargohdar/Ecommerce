@@ -37,8 +37,7 @@ class EnterPasswordPage extends StatelessWidget {
               );
             }
             if (state is ButtonSuccessState) {
-              AppNavigator.pushAndRemove(
-                  context, const PasswordResetEmailPage());
+              AppNavigator.pushAndRemove(context, const Scaffold());
             }
           },
           child: Column(
@@ -80,15 +79,6 @@ class EnterPasswordPage extends StatelessWidget {
   Widget _continueButton(BuildContext context) {
     return BasicReactiveButton(
       onPressed: () {
-        if (_passwordCon.text.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Password cannot be empty'),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-          return;
-        }
         signinUserReq.password = _passwordCon.text;
         context.read<AuthBloc>().add(
               ExecuteUseCase(

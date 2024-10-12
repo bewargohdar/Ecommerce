@@ -9,6 +9,7 @@ abstract class AuthFirebaseService {
   Future<Either> signin(SigninUserReq userModel);
   Future<Either> getAges();
   Future<Either> sendPasswordResetEmail(String email);
+  Future<bool> isLoggedIn();
 }
 
 class AuthFirebaseServiceImpl implements AuthFirebaseService {
@@ -82,6 +83,15 @@ class AuthFirebaseServiceImpl implements AuthFirebaseService {
       return const Right("Email sent successfully");
     } catch (e) {
       return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<bool> isLoggedIn() async {
+    if (_firebaseAuth.currentUser != null) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

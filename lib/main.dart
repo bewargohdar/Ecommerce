@@ -30,11 +30,12 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => SplashBloc()),
         ],
         child: MaterialApp(
+            debugShowCheckedModeBanner: false,
             title: 'Ecomerce',
             theme: AppTheme.appTheme,
             home: BlocProvider(
               create: (context) => SplashBloc()..add(AppStarted()),
-              child: const Splash(),
+              child: Splash(),
             )),
       );
 }

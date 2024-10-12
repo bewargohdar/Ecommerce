@@ -23,7 +23,12 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either> sendPasswordResetEmail(String email) {
-    return sl<AuthFirebaseService>().sendPasswordResetEmail(email);
+  Future<Either> sendPasswordResetEmail(String email) async {
+    return await sl<AuthFirebaseService>().sendPasswordResetEmail(email);
+  }
+
+  @override
+  Future<bool> isLoggedIn() async {
+    return sl<AuthFirebaseService>().isLoggedIn();
   }
 }

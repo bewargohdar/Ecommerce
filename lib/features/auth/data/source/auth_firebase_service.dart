@@ -10,10 +10,12 @@ abstract class AuthFirebaseService {
   Future<Either> getAges();
   Future<Either> sendPasswordResetEmail(String email);
   Future<bool> isLoggedIn();
+  Future<Either> getUser();
 }
 
 class AuthFirebaseServiceImpl implements AuthFirebaseService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
   @override
   Future<Either> signup(UserCredentialRequestModel userModel) async {
@@ -92,6 +94,24 @@ class AuthFirebaseServiceImpl implements AuthFirebaseService {
       return true;
     } else {
       return false;
+    }
+  }
+
+  @override
+  Future<Either> getUser() async {
+    var currentUser = _firebaseAuth.currentUser;
+    var userData = await _firebaseFirestore
+        .collection('User')
+        .doc(
+          currentUser?.uid,
+        )
+        .get()
+        .then((value) => value.data());
+
+    try {
+      return Right(userData);
+    } catch (e) {
+      return const Left('Please try again');
     }
   }
 }

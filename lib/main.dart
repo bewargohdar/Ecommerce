@@ -1,5 +1,6 @@
 import 'package:ecomerce/core/config/theme/app_theme.dart';
 import 'package:ecomerce/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:ecomerce/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ecomerce/features/splash/bloc/splash_bloc.dart';
 import 'package:ecomerce/features/splash/bloc/splash_state.dart';
 import 'package:ecomerce/features/splash/page/splash.dart';
@@ -8,8 +9,6 @@ import 'package:ecomerce/service_locator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-// Assuming SplashBloc and AppStarted are defined elsewhere in your project
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +27,7 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (context) => AuthBloc()),
           BlocProvider(create: (context) => SplashBloc()),
+          BlocProvider(create: (context) => HomeBloc()),
         ],
         child: MaterialApp(
             debugShowCheckedModeBanner: false,

@@ -8,6 +8,8 @@ import 'package:ecomerce/features/auth/domain/usecase/signin.dart';
 import 'package:ecomerce/features/auth/domain/usecase/signup.dart';
 import 'package:get_it/get_it.dart';
 
+import 'features/auth/domain/usecase/get_users.dart';
+
 final sl = GetIt.instance;
 
 Future<void> initializeDependencies() async {
@@ -34,5 +36,8 @@ Future<void> initializeDependencies() async {
   );
   sl.registerLazySingleton<IsLoggedInUseCase>(
     () => IsLoggedInUseCase(),
+  );
+  sl.registerLazySingleton<GetUsers>(
+    () => GetUsers(),
   );
 }

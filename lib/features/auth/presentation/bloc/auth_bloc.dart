@@ -16,7 +16,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
   Future<void> _onFetchAges(FetchAges event, Emitter<AuthState> emit) async {
     emit(AgesLoading());
-    var returnedData = await sl<GetAgesUseCase>().call(null);
+    var returnedData = await sl<GetAgesUseCase>().call();
 
     returnedData.fold(
       (message) => emit(AgesLoadFailure(message: message)),
@@ -37,7 +37,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       ExecuteUseCase event, Emitter<AuthState> emit) async {
     emit(ButtonLoadingState());
     try {
-      Either returnedData = await event.usecase.call(event.params);
+      Either returnedData = await event.usecase.call(params: event.params);
       returnedData.fold(
         (error) => emit(ButtonFailureState(errorMessage: error)),
         (data) => emit(ButtonSuccessState()),
@@ -50,7 +50,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _signIn(SignInEvent event, Emitter<AuthState> emit) async {
     emit(ButtonLoadingState());
     try {
-      Either returnedData = await sl<SigninUsecase>().call(event.signinUserReq);
+      Either returnedData =
+          await sl<SigninUsecase>().call(params: event.signinUserReq);
       returnedData.fold(
         (error) => emit(ButtonFailureState(errorMessage: error)),
         (data) => emit(ButtonSuccessState()),

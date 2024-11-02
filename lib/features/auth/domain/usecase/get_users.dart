@@ -6,7 +6,7 @@ import '../../../../service_locator.dart';
 
 class GetUsers implements Usecase<Either, dynamic> {
   @override
-  Future<Either> call(dynamic params) async {
+  Future<Either> call({params}) async {
     return await sl<AuthRepository>().getUser();
   }
 }

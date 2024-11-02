@@ -6,7 +6,7 @@ import 'package:ecomerce/service_locator.dart';
 
 class SignupUsecase implements Usecase<Either, UserCredentialRequestModel> {
   @override
-  Future<Either> call(UserCredentialRequestModel params) async {
-    return await sl<AuthRepository>().signup(params);
+  Future<Either> call({UserCredentialRequestModel? params}) async {
+    return await sl<AuthRepository>().signup(params!);
   }
 }

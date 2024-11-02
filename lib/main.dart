@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (context) => AuthBloc()),
           BlocProvider(create: (context) => SplashBloc()),
-          BlocProvider(create: (context) => HomeBloc()),
+          BlocProvider(create: (context) => HomeBloc()..add(FetchUserInfo())),
         ],
         child: MaterialApp(
             debugShowCheckedModeBanner: false,
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
             theme: AppTheme.appTheme,
             home: BlocProvider(
               create: (context) => SplashBloc()..add(AppStarted()),
-              child: Splash(),
+              child: const Splash(),
             )),
       );
 }

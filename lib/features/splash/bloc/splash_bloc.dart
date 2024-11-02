@@ -8,7 +8,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   SplashBloc() : super(DisplaySplash()) {
     on<AppStarted>((event, emit) async {
       await Future.delayed(const Duration(seconds: 2));
-      final isLogged = await sl<IsLoggedInUseCase>().call(null);
+      final isLogged = await sl<IsLoggedInUseCase>().call();
       print(isLogged);
       if (isLogged) {
         emit(Authenticated());

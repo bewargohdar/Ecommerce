@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:ecomerce/features/auth/data/models/signin_user_req.dart';
 import 'package:ecomerce/features/auth/data/models/signup_model.dart';
+import 'package:ecomerce/features/auth/data/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class AuthFirebaseService {
@@ -101,15 +102,15 @@ class AuthFirebaseServiceImpl implements AuthFirebaseService {
   Future<Either> getUser() async {
     var currentUser = _firebaseAuth.currentUser;
     var userData = await _firebaseFirestore
-        .collection('User')
+        .collection('Users')
         .doc(
           currentUser?.uid,
         )
         .get()
         .then((value) => value.data());
-
+    UserModel user = UserModel.fromMap(userData ?? {});
     try {
-      return Right(userData);
+      return Right(user);
     } catch (e) {
       return const Left('Please try again');
     }

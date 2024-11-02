@@ -32,12 +32,15 @@ class UserModel {
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      userId: map['userId'] as String,
-      firstName: map['firstName'] as String,
-      lastName: map['lastName'] as String,
-      email: map['email'] as String,
-      image: map['image'] as String,
-      gender: map['gender'] as int,
+      userId:
+          map['userId'] as String? ?? '', // Default to an empty string if null
+      firstName: map['firstName'] as String? ?? '',
+      lastName: map['lastName'] as String? ?? '',
+      email: map['email'] as String? ?? '',
+      image: map['image'] as String? ?? '', // Provide a default value if null
+      gender: map['gender'] != null
+          ? map['gender'] as int
+          : 0, // Default to 0 if null
     );
   }
 

@@ -108,9 +108,9 @@ class AuthFirebaseServiceImpl implements AuthFirebaseService {
         )
         .get()
         .then((value) => value.data());
-    UserModel user = UserModel.fromMap(userData ?? {});
+
     try {
-      return Right(user);
+      return Right(userData);
     } catch (e) {
       return const Left('Please try again');
     }

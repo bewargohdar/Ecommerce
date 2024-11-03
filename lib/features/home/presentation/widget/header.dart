@@ -1,7 +1,6 @@
 import 'package:ecomerce/common/helper/navigator/app_navigator.dart';
 import 'package:ecomerce/core/config/assets/app_images.dart';
 import 'package:ecomerce/core/config/theme/app_color.dart';
-import 'package:ecomerce/features/auth/data/models/user.dart';
 import 'package:ecomerce/features/auth/domain/entity/user_entity.dart';
 import 'package:ecomerce/features/home/presentation/bloc/home_bloc.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +18,6 @@ class Header extends StatelessWidget {
       padding: const EdgeInsets.only(top: 40, right: 16, left: 16),
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
-          print(state);
           if (state is HomeLoading) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -47,7 +45,7 @@ class Header extends StatelessWidget {
     );
   }
 
-  Widget _profileImage(UserModel user, BuildContext context) {
+  Widget _profileImage(UserEntity user, BuildContext context) {
     return GestureDetector(
       onTap: () {
         AppNavigator.push(context, const Scaffold());
@@ -66,7 +64,7 @@ class Header extends StatelessWidget {
     );
   }
 
-  Widget _gender(UserModel user) {
+  Widget _gender(UserEntity user) {
     return Container(
       height: 40,
       padding: const EdgeInsets.symmetric(horizontal: 16),

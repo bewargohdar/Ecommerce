@@ -6,21 +6,20 @@ import 'package:ecomerce/features/auth/data/source/auth_firebase_service.dart';
 import 'package:ecomerce/features/auth/domain/repository/auth_repository.dart';
 import 'package:ecomerce/service_locator.dart';
 
-class AuthRepositoryImpl implements AuthRepository {
-  late final AuthFirebaseService authFirebaseService;
+class AuthRepositoryImpl extends AuthRepository {
   @override
   Future<Either> signup(UserCredentialRequestModel userModel) async {
     return await sl<AuthFirebaseService>().signup(userModel);
   }
 
   @override
-  Future<Either> getAges() {
-    return sl<AuthFirebaseService>().getAges();
+  Future<Either> getAges() async {
+    return await sl<AuthFirebaseService>().getAges();
   }
 
   @override
-  Future<Either> signin(SigninUserReq userModel) async {
-    return await sl<AuthFirebaseService>().signin(userModel);
+  Future<Either> signin(SigninUserReq user) async {
+    return await sl<AuthFirebaseService>().signin(user);
   }
 
   @override
@@ -30,7 +29,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<bool> isLoggedIn() async {
-    return sl<AuthFirebaseService>().isLoggedIn();
+    return await sl<AuthFirebaseService>().isLoggedIn();
   }
 
   @override
@@ -39,7 +38,7 @@ class AuthRepositoryImpl implements AuthRepository {
     return user.fold((error) {
       return Left(error);
     }, (data) {
-      return Right(UserModel.fromJson(data).toEntity());
+      return Right(UserModel.fromMap(data).toEntity());
     });
   }
 }

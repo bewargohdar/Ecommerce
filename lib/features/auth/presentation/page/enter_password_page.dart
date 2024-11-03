@@ -7,7 +7,6 @@ import 'package:ecomerce/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ecomerce/features/auth/presentation/bloc/auth_event.dart';
 import 'package:ecomerce/features/auth/presentation/bloc/auth_state.dart';
 import 'package:ecomerce/features/auth/presentation/page/forgot_page.dart';
-import 'package:ecomerce/features/auth/presentation/page/password_reset_email.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

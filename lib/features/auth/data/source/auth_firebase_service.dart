@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:ecomerce/features/auth/data/models/signin_user_req.dart';
 import 'package:ecomerce/features/auth/data/models/signup_model.dart';
-import 'package:ecomerce/features/auth/data/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class AuthFirebaseService {

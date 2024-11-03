@@ -1,8 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:dartz/dartz.dart';
-import 'package:ecomerce/features/auth/data/models/user.dart';
 import 'package:ecomerce/features/auth/domain/usecase/get_users.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 
 import '../../../../service_locator.dart';

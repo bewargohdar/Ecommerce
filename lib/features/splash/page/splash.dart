@@ -4,7 +4,8 @@ import 'package:ecomerce/core/config/theme/app_color.dart';
 import 'package:ecomerce/features/auth/presentation/page/signin_page.dart';
 import 'package:ecomerce/features/home/presentation/page/home.dart';
 import 'package:ecomerce/features/splash/bloc/splash_bloc.dart';
-import 'package:ecomerce/features/splash/bloc/splash_event.dart';
+
+import 'package:ecomerce/features/splash/bloc/splash_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';

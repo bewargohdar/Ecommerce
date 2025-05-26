@@ -1,3 +1,7 @@
-abstract class SplashEvent {}
+abstract class SplashState {}
 
-class AppStarted extends SplashEvent {}
+class DisplaySplash extends SplashState {}
+
+class Authenticated extends SplashState {}
+
+class UnAuthenticated extends SplashState {}

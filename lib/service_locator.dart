@@ -16,6 +16,9 @@ import 'features/auth/domain/usecase/get_users.dart';
 final sl = GetIt.instance;
 
 Future<void> initializeDependencies() async {
+  // Using lazy singletons for better performance
+  // These will be created only when first accessed
+
   //services
   sl.registerLazySingleton<AuthFirebaseService>(
     () => AuthFirebaseServiceImpl(),
@@ -27,7 +30,8 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(),
   );
-  // usecases
+
+  // usecases - these are lazy loaded for better startup performance
   sl.registerLazySingleton<SignupUsecase>(
     () => SignupUsecase(),
   );

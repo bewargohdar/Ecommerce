@@ -14,7 +14,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetUsers getUsers = sl<GetUsers>();
   final GetCategories getCategories = sl<GetCategories>();
 
-  HomeBloc() : super( HomeDataLoaded()) {
+  HomeBloc() : super(HomeDataLoaded()) {
     on<FetchUserInfo>(_fetchUserInfo);
     on<FetchCategories>(_fetchCategories);
   }
@@ -26,12 +26,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if (currentState is HomeDataLoaded) {
       emit(currentState.copyWith(isLoadingUser: true, clearUserError: true));
     } else {
-      emit( HomeDataLoaded(isLoadingUser: true));
+      emit(HomeDataLoaded(isLoadingUser: true));
     }
 
     var returnedData = await getUsers.call();
     final newCurrentState = state;
-    
+
     returnedData.fold((error) {
       if (newCurrentState is HomeDataLoaded) {
         emit(newCurrentState.copyWith(
@@ -55,9 +55,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     // Get current state
     final currentState = state;
     if (currentState is HomeDataLoaded) {
-      emit(currentState.copyWith(isLoadingCategories: true, clearCategoriesError: true));
+      emit(currentState.copyWith(
+          isLoadingCategories: true, clearCategoriesError: true));
     } else {
-      emit( HomeDataLoaded(isLoadingCategories: true));
+      emit(HomeDataLoaded(isLoadingCategories: true));
     }
 
     var returnedData = await getCategories.call();

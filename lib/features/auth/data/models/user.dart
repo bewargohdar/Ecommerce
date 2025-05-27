@@ -33,12 +33,22 @@ class UserModel {
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       userId: map['userId'] as String? ?? '',
-      firstName: map['firstName'] as String,
-      lastName: map['lastName'] as String,
-      email: map['email'] as String,
-      image: map['image'] ?? '',
-      gender: map['gender'] as int,
+      firstName: map['firstName'] as String? ?? '',
+      lastName: map['lastName'] as String? ?? '',
+      email: map['email'] as String? ?? '',
+      image: map['image'] as String? ?? '',
+      gender: _parseGender(map['gender']),
     );
+  }
+
+  static int _parseGender(dynamic gender) {
+    if (gender is int) {
+      return gender;
+    } else if (gender is String) {
+      return int.tryParse(gender) ?? 0;
+    } else {
+      return 0;
+    }
   }
 
   String toJson() => json.encode(toMap());

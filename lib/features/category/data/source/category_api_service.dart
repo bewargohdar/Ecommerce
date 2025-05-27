@@ -40,7 +40,6 @@ class CategoryApiServiceImpl implements CategoryApiService {
             'Failed to load categories. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error in getCategories: $e');
       return Left('Network error: ${e.toString()}');
     }
   }

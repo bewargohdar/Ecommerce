@@ -30,19 +30,19 @@ class ProductCart extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(
+          const Expanded(
             flex: 1,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
+              children: [
+                const Text(
                   'Mohair Blouse',
                   style: TextStyle(
                       fontSize: 12,
                       overflow: TextOverflow.ellipsis,
                       fontWeight: FontWeight.w300),
                 ),
-                Row(
+                const Row(
                   children: [
                     Text(
                       '\$100',

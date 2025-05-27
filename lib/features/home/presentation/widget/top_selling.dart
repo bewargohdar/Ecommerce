@@ -11,7 +11,7 @@ class TopSelling extends StatelessWidget {
     return SizedBox(
       height: 300,
       child: ListView.separated(
-          separatorBuilder: (context, index) => SizedBox(
+          separatorBuilder: (context, index) => const SizedBox(
                 width: 20,
               ),
           itemCount: 5,

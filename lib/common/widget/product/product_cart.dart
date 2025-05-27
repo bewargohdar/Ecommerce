@@ -21,7 +21,7 @@ class ProductCart extends StatelessWidget {
           Expanded(
             flex: 4,
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 image: DecorationImage(
                   image: AssetImage(AppImages.profile),
@@ -34,10 +34,10 @@ class ProductCart extends StatelessWidget {
             flex: 1,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: const [
                 Text(
                   'Mohair Blouse',
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 12,
                       overflow: TextOverflow.ellipsis,
                       fontWeight: FontWeight.w300),
@@ -46,17 +46,17 @@ class ProductCart extends StatelessWidget {
                   children: [
                     Text(
                       '\$100',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w300,
                       ),
                     ),
-                    const SizedBox(
+                    SizedBox(
                       width: 10,
                     ),
                     Text(
                       '\$120',
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey,
                           fontWeight: FontWeight.w300,

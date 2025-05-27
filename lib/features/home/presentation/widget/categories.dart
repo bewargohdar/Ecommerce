@@ -73,7 +73,7 @@ class Categories extends StatelessWidget {
                         child: Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.black.withOpacity(0.1),
+                            color: Colors.black.withValues(alpha: 0.1),
                           ),
                         ),
                       ),
@@ -154,13 +154,12 @@ class Categories extends StatelessWidget {
                             // Handle image loading error silently
                           },
                         ),
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.black.withOpacity(0.1),
+                      ),                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.black.withValues(alpha: 0.1),
+                          ),
                         ),
-                      ),
                     ),
                     const SizedBox(height: 10),
                     SizedBox(

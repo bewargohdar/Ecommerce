@@ -1,11 +1,11 @@
 class CategoryEntity {
-  final String categoryId;
-  final String title;
-  final String imageUrl;
+  final String slug;
+  final String name;
+  final String url;
 
   CategoryEntity({
-    required this.categoryId,
-    required this.title,
-    required this.imageUrl,
+    required this.slug,
+    required this.name,
+    required this.url,
   });
 }

@@ -1,9 +1,10 @@
-import 'package:ecomerce/core/config/assets/app_images.dart';
+import 'package:ecomerce/core/config/theme/app_color.dart';
 import 'package:ecomerce/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ecomerce/features/home/presentation/widget/categories.dart';
 import 'package:ecomerce/features/home/presentation/widget/categories_header.dart';
 import 'package:ecomerce/features/home/presentation/widget/header.dart';
 import 'package:ecomerce/features/home/presentation/widget/search.dart';
+import 'package:ecomerce/features/home/presentation/widget/top_selling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,13 +19,14 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // Fetch user info only when home page is loaded
+
     context.read<HomeBloc>().add(FetchUserInfo());
+    context.read<HomeBloc>().add(FetchCategories());
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -39,11 +41,25 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               height: 10,
             ),
-            CategoriesHeader(),
+            CategoriesHeader(
+              text: "Categories",
+            ),
             SizedBox(
               height: 10,
             ),
             Categories(),
+            SizedBox(
+              height: 10,
+            ),
+            CategoriesHeader(
+              text: "Top Selling",
+            ),
+            TopSelling(),
+            CategoriesHeader(
+              text: 'New In',
+              color: AppColors.primary,
+            ),
+            TopSelling(),
           ],
         ),
       ),

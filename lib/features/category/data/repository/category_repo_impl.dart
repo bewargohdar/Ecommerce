@@ -1,14 +1,28 @@
 import 'package:dartz/dartz.dart';
-import 'package:ecomerce/features/category/data/model/category_model.dart';
+import 'package:ecomerce/features/category/data/source/category_api_service.dart';
+import 'package:ecomerce/features/category/domain/entity/category.dart';
 import 'package:ecomerce/features/category/domain/repository/category_repo.dart';
-import 'package:ecomerce/service_locator.dart';
 
-class CategoryRepoImpl extends CategoryRepo {
+class CategoryRepoImpl implements CategoryRepo {
+  final CategoryApiService _categoryApiService;
+  CategoryRepoImpl(this._categoryApiService);
   @override
-  Future<Either> getCategories() async {
-    var categories = await sl<CategoryRepo>().getCategories();
+  Future<Either<String, List<CategoryEntity>>> getCategories() async {
+    final result = await _categoryApiService.getCategories();
 
-    return categories.fold((error) => Left(error),
-        (data) => Right(CategoryModel.fromMap(data).toEntity()));
+    return result.fold(
+      (failure) => Left(failure),
+      (categoryModels) {
+        // categoryModels is already List<CategoryModel>, so we just need to convert to entities
+        final categoryEntities = categoryModels.map<CategoryEntity>((model) {
+          return CategoryEntity(
+            slug: model.slug,
+            name: model.name,
+            url: model.url,
+          );
+        }).toList();
+        return Right(categoryEntities);
+      },
+    );
   }
 }

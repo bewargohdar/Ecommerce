@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CategoriesHeader extends StatelessWidget {
-  const CategoriesHeader({
-    super.key,
-  });
-
+  const CategoriesHeader({super.key, required this.text, this.color});
+  final String text;
+  final Color? color;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -12,10 +11,12 @@ class CategoriesHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
-            "Categories",
+          Text(
+            text,
             style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: color ?? Colors.white),
           ),
           TextButton(
             onPressed: () {},

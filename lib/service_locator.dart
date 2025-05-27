@@ -7,8 +7,9 @@ import 'package:ecomerce/features/auth/domain/usecase/send_password_reset.dart';
 import 'package:ecomerce/features/auth/domain/usecase/signin.dart';
 import 'package:ecomerce/features/auth/domain/usecase/signup.dart';
 import 'package:ecomerce/features/category/data/repository/category_repo_impl.dart';
-import 'package:ecomerce/features/category/data/source/category_firebase_service.dart';
+import 'package:ecomerce/features/category/data/source/category_api_service.dart';
 import 'package:ecomerce/features/category/domain/repository/category_repo.dart';
+import 'package:ecomerce/features/category/domain/usecase/get_categories.dart';
 import 'package:get_it/get_it.dart';
 
 import 'features/auth/domain/usecase/get_users.dart';
@@ -23,8 +24,8 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<AuthFirebaseService>(
     () => AuthFirebaseServiceImpl(),
   );
-  sl.registerLazySingleton<CategoryFirebaseService>(
-    () => CategoryFirebaseServiceImpl(),
+  sl.registerLazySingleton<CategoryApiService>(
+    () => CategoryApiServiceImpl(),
   );
 
   sl.registerLazySingleton<AuthRepository>(
@@ -53,6 +54,9 @@ Future<void> initializeDependencies() async {
 
   // categories
   sl.registerLazySingleton<CategoryRepo>(
-    () => CategoryRepoImpl(),
+    () => CategoryRepoImpl(sl<CategoryApiService>()),
+  );
+  sl.registerLazySingleton<GetCategories>(
+    () => GetCategories(sl<CategoryRepo>()),
   );
 }

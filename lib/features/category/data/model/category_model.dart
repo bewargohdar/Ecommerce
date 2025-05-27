@@ -1,47 +1,20 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 import 'package:ecomerce/features/category/domain/entity/category.dart';
 
-class CategoryModel {
-  final String categoryId;
-  final String title;
-  final String imageUrl;
+class CategoryModel extends CategoryEntity {
+  CategoryModel({required super.slug, required super.name, required super.url});
 
-  CategoryModel({
-    required this.categoryId,
-    required this.title,
-    required this.imageUrl,
-  });
+  CategoryModel.fromJson(Map<String, dynamic> json)
+      : super(
+          slug: json['slug']?.toString() ?? '',
+          name: json['name']?.toString() ?? '',
+          url: json['url']?.toString() ?? '',
+        );
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'categoryId': categoryId,
-      'title': title,
-      'imageUrl': imageUrl,
-    };
-  }
-
-  factory CategoryModel.fromMap(Map<String, dynamic> map) {
-    return CategoryModel(
-      categoryId: map['categoryId'] as String,
-      title: map['title'] as String,
-      imageUrl: map['imageUrl'] as String,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory CategoryModel.fromJson(String source) =>
-      CategoryModel.fromMap(json.decode(source) as Map<String, dynamic>);
-}
-
-extension CategoryModelX on CategoryModel {
-  CategoryEntity toEntity() {
-    return CategoryEntity(
-      categoryId: categoryId,
-      title: title,
-      imageUrl: imageUrl,
-    );
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['slug'] = slug;
+    data['name'] = name;
+    data['url'] = url;
+    return data;
   }
 }

@@ -10,6 +10,7 @@ import 'package:ecomerce/features/category/data/repository/category_repo_impl.da
 import 'package:ecomerce/features/category/data/source/category_api_service.dart';
 import 'package:ecomerce/features/category/domain/repository/category_repo.dart';
 import 'package:ecomerce/features/category/domain/usecase/get_categories.dart';
+import 'package:ecomerce/features/category/presentation/bloc/category_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import 'features/auth/domain/usecase/get_users.dart';
@@ -51,12 +52,16 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<GetUsers>(
     () => GetUsers(),
   );
-
+  sl.registerLazySingleton<GetCategories>(
+    () => GetCategories(sl<CategoryRepo>()),
+  );
   // categories
   sl.registerLazySingleton<CategoryRepo>(
     () => CategoryRepoImpl(sl<CategoryApiService>()),
   );
-  sl.registerLazySingleton<GetCategories>(
-    () => GetCategories(sl<CategoryRepo>()),
+
+  // blocs
+  sl.registerFactory<CategoryBloc>(
+    () => CategoryBloc(sl<GetCategories>()),
   );
 }

@@ -1,3 +1,4 @@
+import 'package:ecomerce/features/category/presentation/screen/category.dart';
 import 'package:flutter/material.dart';
 
 class CategoriesHeader extends StatelessWidget {
@@ -19,7 +20,11 @@ class CategoriesHeader extends StatelessWidget {
                 color: color ?? Colors.white),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return const CategoryPage();
+              }));
+            },
             child: const Text(
               "See all",
               style: TextStyle(

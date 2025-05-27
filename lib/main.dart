@@ -1,5 +1,6 @@
 import 'package:ecomerce/core/config/theme/app_theme.dart';
 import 'package:ecomerce/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:ecomerce/features/category/presentation/bloc/category_bloc.dart';
 import 'package:ecomerce/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ecomerce/features/splash/bloc/splash_bloc.dart';
 import 'package:ecomerce/features/splash/bloc/splash_event.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => SplashBloc()..add(AppStarted())),
           // HomeBloc will be created lazily when needed
           BlocProvider(create: (context) => HomeBloc()),
+          BlocProvider(create: (context) => sl<CategoryBloc>()),
         ],
         child: MaterialApp(
             debugShowCheckedModeBanner: false,

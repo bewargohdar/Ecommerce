@@ -6,10 +6,8 @@ import 'package:ecomerce/features/auth/data/models/signup_model.dart';
 import 'package:ecomerce/features/auth/presentation/page/gender_page.dart';
 import 'package:ecomerce/features/auth/presentation/page/signin_page.dart';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class SignupPage extends StatelessWidget {
   SignupPage({super.key});

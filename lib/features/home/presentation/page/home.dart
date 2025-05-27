@@ -23,8 +23,13 @@ class _HomePageState extends State<HomePage> {
     return const Scaffold(
       body: SingleChildScrollView(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Header(),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 60, horizontal: 16),
+              child: Header(),
+            ),
           ],
         ),
       ),

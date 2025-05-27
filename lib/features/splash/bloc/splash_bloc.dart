@@ -7,22 +7,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
   SplashBloc() : super(DisplaySplash()) {
     on<AppStarted>((event, emit) async {
-      // Remove the artificial delay for faster startup
-      // Add minimal delay only for smooth transition
-      await Future.delayed(const Duration(milliseconds: 500));
-
+      await Future.delayed(const Duration(milliseconds: 2500));
       try {
         final isLogged = await sl<IsLoggedInUseCase>().call();
-        print('User logged in: $isLogged');
-
         if (isLogged) {
           emit(Authenticated());
         } else {
           emit(UnAuthenticated());
         }
       } catch (e) {
-        print('Error checking authentication: $e');
-        // Default to unauthenticated on error
         emit(UnAuthenticated());
       }
     });

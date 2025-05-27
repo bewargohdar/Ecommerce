@@ -40,6 +40,8 @@ dependencies:
   cloud_firestore:
   flutter_svg:
   flutter_bloc:
+  bloc:
+  meta:
   dartz:
   get_it:
   dio: ^5.8.0+1

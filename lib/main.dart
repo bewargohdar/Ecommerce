@@ -2,6 +2,7 @@ import 'package:ecomerce/core/config/theme/app_theme.dart';
 import 'package:ecomerce/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ecomerce/features/category/presentation/bloc/category_bloc.dart';
 import 'package:ecomerce/features/home/presentation/bloc/home_bloc.dart';
+import 'package:ecomerce/features/product/presentation/bloc/product_bloc.dart';
 import 'package:ecomerce/features/splash/bloc/splash_bloc.dart';
 import 'package:ecomerce/features/splash/bloc/splash_event.dart';
 import 'package:ecomerce/features/splash/page/splash.dart';
@@ -19,6 +20,8 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
   ]);
 
   // Initialize Firebase and dependencies in parallel for faster startup
@@ -41,6 +44,7 @@ class MyApp extends StatelessWidget {
           // HomeBloc will be created lazily when needed
           BlocProvider(create: (context) => HomeBloc()),
           BlocProvider(create: (context) => sl<CategoryBloc>()),
+          BlocProvider(create: (context) => sl<ProductBloc>())
         ],
         child: MaterialApp(
             debugShowCheckedModeBanner: false,

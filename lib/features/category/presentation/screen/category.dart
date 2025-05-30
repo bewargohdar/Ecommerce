@@ -1,8 +1,7 @@
 import 'package:ecomerce/common/widget/appbar/app_bar.dart';
-import 'package:ecomerce/core/config/theme/app_color.dart';
-import 'package:ecomerce/features/category/domain/entity/category.dart';
+
 import 'package:ecomerce/features/category/presentation/bloc/category_bloc.dart';
-import 'package:ecomerce/features/category/data/helper/category_image_helper.dart';
+
 import 'package:ecomerce/features/category/presentation/widget/category_list_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

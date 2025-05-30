@@ -8,12 +8,14 @@ abstract class CategoryApiService {
 }
 
 class CategoryApiServiceImpl implements CategoryApiService {
-  final dio = Dio();
+  final Dio _dio;
+
+  CategoryApiServiceImpl(this._dio);
 
   @override
   Future<Either<String, List<CategoryModel>>> getCategories() async {
     try {
-      final response = await dio.get('$baseUrl/products/categories');
+      final response = await _dio.get('$baseUrl/products/categories');
 
       if (response.statusCode == 200) {
         final data = response.data;

@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'signin_user_req.g.dart';
+
+@JsonSerializable()
 class SigninUserReq {
   final String email;
   String? password;
@@ -7,10 +12,8 @@ class SigninUserReq {
     this.password,
   });
 
-  Map<String, dynamic> toJson() {
-    return {
-      'email': email,
-      'password': password,
-    };
-  }
+  factory SigninUserReq.fromJson(Map<String, dynamic> json) =>
+      _$SigninUserReqFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SigninUserReqToJson(this);
 }

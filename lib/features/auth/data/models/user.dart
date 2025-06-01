@@ -1,45 +1,33 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
+import 'package:json_annotation/json_annotation.dart';
 
 import '../../domain/entity/user_entity.dart';
 
+part 'user.g.dart';
+
+@JsonSerializable()
 class UserModel {
+  @JsonKey(defaultValue: '')
   final String userId;
+  @JsonKey(defaultValue: '')
   final String firstName;
+  @JsonKey(defaultValue: '')
   final String lastName;
+  @JsonKey(defaultValue: '')
   final String email;
+  @JsonKey(defaultValue: '')
   final String image;
+  @JsonKey(fromJson: _parseGender, defaultValue: 0)
   final int gender;
 
-  UserModel(
-      {required this.userId,
-      required this.firstName,
-      required this.lastName,
-      required this.email,
-      required this.image,
-      required this.gender});
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'userId': userId,
-      'firstName': firstName,
-      'lastName': lastName,
-      'email': email,
-      'image': image,
-      'gender': gender,
-    };
-  }
-
-  factory UserModel.fromMap(Map<String, dynamic> map) {
-    return UserModel(
-      userId: map['userId'] as String? ?? '',
-      firstName: map['firstName'] as String? ?? '',
-      lastName: map['lastName'] as String? ?? '',
-      email: map['email'] as String? ?? '',
-      image: map['image'] as String? ?? '',
-      gender: _parseGender(map['gender']),
-    );
-  }
+  UserModel({
+    required this.userId,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.image,
+    required this.gender,
+  });
 
   static int _parseGender(dynamic gender) {
     if (gender is int) {
@@ -51,10 +39,10 @@ class UserModel {
     }
   }
 
-  String toJson() => json.encode(toMap());
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
 
-  factory UserModel.fromJson(String source) =>
-      UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  Map<String, dynamic> toJson() => _$UserModelToJson(this);
 }
 
 extension UserXModel on UserModel {

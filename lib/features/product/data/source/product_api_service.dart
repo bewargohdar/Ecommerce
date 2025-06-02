@@ -2,10 +2,13 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:ecomerce/core/constant/const.dart';
 import 'package:ecomerce/features/product/data/models/product_model.dart';
+import 'package:retrofit/retrofit.dart';
 
+@RestApi(baseUrl: baseUrl)
 abstract class ProductApiService {
+  @GET('/products/category/{categorySlug}')
   Future<Either<String, List<ProductModel>>> getProductsByCategory(
-      String categorySlug);
+      @Path('categorySlug') String categorySlug);
 }
 
 class ProductApiServiceImpl implements ProductApiService {
@@ -17,28 +20,17 @@ class ProductApiServiceImpl implements ProductApiService {
   Future<Either<String, List<ProductModel>>> getProductsByCategory(
       String categorySlug) async {
     try {
-      final response =
-          await _dio.get('$baseUrl/products/category/$categorySlug');
-
+      final response = await _dio.get('/products/category/$categorySlug');
       if (response.statusCode == 200) {
-        final data = response.data;
-
-        if (data is Map<String, dynamic> && data.containsKey('products')) {
-          final productsData = data['products'] as List<dynamic>;
-
-          return Right(productsData
-              .map((product) =>
-                  ProductModel.fromJson(product as Map<String, dynamic>))
-              .toList());
-        } else {
-          return const Left('Unexpected API response format');
-        }
+        final List<dynamic> data = response.data;
+        final products =
+            data.map((item) => ProductModel.fromJson(item)).toList();
+        return Right(products);
       } else {
-        return Left(
-            'Failed to load products. Status code: ${response.statusCode}');
+        return Left('Failed to load products');
       }
     } catch (e) {
-      return Left('Network error: ${e.toString()}');
+      return Left(e.toString());
     }
   }
 }

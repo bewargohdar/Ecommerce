@@ -27,7 +27,7 @@ class ProductApiServiceImpl implements ProductApiService {
             data.map((item) => ProductModel.fromJson(item)).toList();
         return Right(products);
       } else {
-        return Left('Failed to load products');
+        return const Left('Failed to load products');
       }
     } catch (e) {
       return Left(e.toString());

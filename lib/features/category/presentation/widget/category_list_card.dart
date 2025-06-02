@@ -1,6 +1,6 @@
 import 'package:ecomerce/common/helper/navigator/app_navigator.dart';
 import 'package:ecomerce/core/config/theme/app_color.dart';
-import 'package:ecomerce/features/category/data/helper/category_image_helper.dart';
+import 'package:ecomerce/common/helper/category_image_helper.dart';
 import 'package:ecomerce/features/category/domain/entity/category.dart';
 import 'package:ecomerce/features/product/presentation/bloc/product_bloc.dart';
 import 'package:ecomerce/features/product/presentation/page/products_page.dart';

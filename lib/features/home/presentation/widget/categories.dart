@@ -1,4 +1,4 @@
-import 'package:ecomerce/features/category/data/helper/category_image_helper.dart';
+import 'package:ecomerce/common/helper/category_image_helper.dart';
 import 'package:ecomerce/features/home/presentation/bloc/home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

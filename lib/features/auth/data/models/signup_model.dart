@@ -11,7 +11,7 @@ class UserCredentialRequestModel {
   String? password;
   int? gender;
   String? age;
-  
+
   UserCredentialRequestModel({
     required this.firstName,
     required this.lastName,

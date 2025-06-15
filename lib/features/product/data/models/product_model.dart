@@ -1,7 +1,8 @@
-// --- Model Definitions ---
-
 import 'package:ecomerce/features/product/domain/entity/product.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'product_model.g.dart';
 
+@JsonSerializable()
 class DimensionsModel extends DimensionsEntity {
   const DimensionsModel({
     required super.width,
@@ -9,23 +10,13 @@ class DimensionsModel extends DimensionsEntity {
     required super.depth,
   });
 
-  factory DimensionsModel.fromJson(Map<String, dynamic> json) {
-    return DimensionsModel(
-      width: (json['width'] as num?)?.toDouble() ?? 0.0,
-      height: (json['height'] as num?)?.toDouble() ?? 0.0,
-      depth: (json['depth'] as num?)?.toDouble() ?? 0.0,
-    );
-  }
+  factory DimensionsModel.fromJson(Map<String, dynamic> json) =>
+      _$DimensionsModelFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'width': width,
-      'height': height,
-      'depth': depth,
-    };
-  }
+  Map<String, dynamic> toJson() => _$DimensionsModelToJson(this);
 }
 
+@JsonSerializable()
 class ReviewModel extends ReviewEntity {
   const ReviewModel({
     required super.rating,
@@ -35,27 +26,10 @@ class ReviewModel extends ReviewEntity {
     required super.reviewerEmail,
   });
 
-  factory ReviewModel.fromJson(Map<String, dynamic> json) {
-    return ReviewModel(
-      rating: json['rating'] as int? ?? 0,
-      comment: json['comment'] as String? ?? '',
-      date: json['date'] != null
-          ? DateTime.tryParse(json['date'] as String) ?? DateTime.now()
-          : DateTime.now(),
-      reviewerName: json['reviewerName'] as String? ?? '',
-      reviewerEmail: json['reviewerEmail'] as String? ?? '',
-    );
-  }
+  factory ReviewModel.fromJson(Map<String, dynamic> json) =>
+      _$ReviewModelFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'rating': rating,
-      'comment': comment,
-      'date': date.toIso8601String(),
-      'reviewerName': reviewerName,
-      'reviewerEmail': reviewerEmail,
-    };
-  }
+  Map<String, dynamic> toJson() => _$ReviewModelToJson(this);
 }
 
 class MetaModel extends MetaEntity {

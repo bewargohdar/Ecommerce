@@ -35,14 +35,14 @@ class ProductCart extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Mohair Blouse',
                   style: TextStyle(
                       fontSize: 12,
                       overflow: TextOverflow.ellipsis,
                       fontWeight: FontWeight.w300),
                 ),
-                const Row(
+                Row(
                   children: [
                     Text(
                       '\$100',

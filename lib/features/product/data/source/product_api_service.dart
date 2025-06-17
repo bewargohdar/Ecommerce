@@ -9,6 +9,9 @@ abstract class ProductApiService {
   @GET('/products/category/{categorySlug}')
   Future<Either<String, List<ProductModel>>> getProductsByCategory(
       @Path('categorySlug') String categorySlug);
+
+  @GET('/products')
+  Future<Either<String, List<ProductModel>>> getAllProducts();
 }
 
 class ProductApiServiceImpl implements ProductApiService {
@@ -23,6 +26,23 @@ class ProductApiServiceImpl implements ProductApiService {
       final response = await _dio.get('/products/category/$categorySlug');
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
+        final products =
+            data.map((item) => ProductModel.fromJson(item)).toList();
+        return Right(products);
+      } else {
+        return const Left('Failed to load products');
+      }
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, List<ProductModel>>> getAllProducts() async {
+    try {
+      final response = await _dio.get('/products');
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data['products'];
         final products =
             data.map((item) => ProductModel.fromJson(item)).toList();
         return Right(products);

@@ -1,7 +1,7 @@
 import 'package:ecomerce/features/category/domain/entity/category.dart';
 
-class GeneralSearchResponse {
+class GeneralSearchResponseEntity {
   final List<CategoryEntity>? categories;
 
-  GeneralSearchResponse({this.categories});
+  GeneralSearchResponseEntity({this.categories});
 }

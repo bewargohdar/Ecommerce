@@ -124,7 +124,6 @@ class GenderAndAgeSelectionPage extends StatelessWidget {
 
         return GestureDetector(
           onTap: () {
-            // Dispatch the FetchAges event here to load the age options
             context.read<AuthBloc>().add(FetchAges());
 
             AppBottomsheet.display(

@@ -7,12 +7,16 @@ class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {
   final Color? backgroundColor;
   final bool hideBack;
   final double? height;
+  final double? leadingWidth;
+  final double? titleSpacing;
   const BasicAppbar(
       {this.title,
       this.hideBack = false,
       this.action,
       this.backgroundColor,
       this.height,
+      this.leadingWidth, // Add this
+      this.titleSpacing,
       super.key});
 
   @override
@@ -24,9 +28,11 @@ class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       centerTitle: true,
       automaticallyImplyLeading: false,
-      toolbarHeight: height ?? 80,
+      // toolbarHeight: height ?? 80,
       title: title ?? const Text(''),
-      titleSpacing: 0,
+
+      leadingWidth: leadingWidth ?? 56, // Control the width of leading widget
+      titleSpacing: titleSpacing ?? 0,
       actions: [action ?? Container()],
       leading: hideBack
           ? null
@@ -37,8 +43,11 @@ class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {
               icon: Container(
                 height: 50,
                 width: 50,
-                decoration: const BoxDecoration(
-                    color: AppColors.secondBackground, shape: BoxShape.circle),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                decoration: BoxDecoration(
+                    color: AppColors.secondBackground,
+                    borderRadius: BorderRadius.circular(50)),
                 child: const Icon(Icons.arrow_back_ios_new,
                     size: 15, color: Colors.white),
               ),

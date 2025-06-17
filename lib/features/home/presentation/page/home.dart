@@ -3,7 +3,7 @@ import 'package:ecomerce/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ecomerce/features/home/presentation/widget/categories.dart';
 import 'package:ecomerce/features/home/presentation/widget/categories_header.dart';
 import 'package:ecomerce/features/home/presentation/widget/header.dart';
-import 'package:ecomerce/features/home/presentation/widget/search.dart';
+import 'package:ecomerce/common/widget/search.dart';
 import 'package:ecomerce/features/home/presentation/widget/top_selling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

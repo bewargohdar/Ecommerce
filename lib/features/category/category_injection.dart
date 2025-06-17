@@ -8,7 +8,7 @@ import 'package:ecomerce/service_locator.dart';
 
 void setUpCategoryDependencies() {
   sl.registerLazySingleton<CategoryApiService>(
-    () => CategoryApiServiceImpl(sl<Dio>()),
+    () => CategoryApiService(sl<Dio>()),
   );
 
   sl.registerLazySingleton<CategoryRepo>(

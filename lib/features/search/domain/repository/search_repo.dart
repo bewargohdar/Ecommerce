@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:ecomerce/features/product/domain/entity/product.dart';
+import 'package:ecomerce/features/search/domain/entity/search_response.dart';
 
 abstract class SearchRepository {
-  Future<Either<String, List<ProductEntity>>> searchProducts(String query);
+  Future<Either<String, GeneralSearchResponseEntity>> searchProducts(
+      String query);
 }

@@ -1,12 +1,25 @@
-import 'package:ecomerce/common/helper/navigator/app_navigator.dart';
 import 'package:ecomerce/core/config/assets/app_vectors.dart';
 import 'package:ecomerce/core/config/theme/app_color.dart';
-import 'package:ecomerce/features/search/presentation/page/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SearchField extends StatelessWidget {
-  const SearchField({super.key});
+  final TextEditingController? controller;
+  final bool readOnly;
+  final bool autofocus;
+  final VoidCallback? onTap;
+  final ValueChanged<String>? onSubmitted;
+  final Widget? suffixIcon;
+
+  const SearchField({
+    super.key,
+    this.controller,
+    this.readOnly = false,
+    this.autofocus = false,
+    this.onTap,
+    this.onSubmitted,
+    this.suffixIcon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,36 +27,43 @@ class SearchField extends StatelessWidget {
     final OutlineInputBorder roundedBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(50.0), // Your desired radius
       borderSide: const BorderSide(
-        color: AppColors.background,
+        color: AppColors.secondBackground,
       ), // Default border color and width
     );
 
     final OutlineInputBorder focusedRoundedBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(50.0), // Your desired radius
       borderSide: BorderSide(
-          color: Theme.of(context).primaryColor,
-          width: 2.0), // Border color and width when focused
+        color: Theme.of(context).primaryColor,
+        width: 1.5,
+      ), // Border color and width when focused
     );
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: TextField(
-        readOnly: true,
-        onTap: () {
-          AppNavigator.push(context, const SearchPage());
-        },
+        controller: controller,
+        readOnly: readOnly,
+        autofocus: autofocus,
+        onTap: onTap,
+        onSubmitted: onSubmitted,
+        style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.all(12),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+          filled: true,
+          fillColor: AppColors.secondBackground,
+          hintText: 'Search',
+          hintStyle: const TextStyle(color: Colors.white70),
           border: roundedBorder,
           enabledBorder: roundedBorder,
-
           focusedBorder:
               focusedRoundedBorder, // You already had this, can customize color/width
           prefixIcon: SvgPicture.asset(
             AppVectors.search,
             fit: BoxFit.none,
           ),
-          hintText: 'search',
+          suffixIcon: suffixIcon,
         ),
       ),
     );

@@ -1,12 +1,12 @@
 import 'package:ecomerce/common/widget/appbar/app_bar.dart';
-import 'package:ecomerce/core/config/assets/app_vectors.dart';
+import 'package:ecomerce/common/widget/search.dart';
+
 import 'package:ecomerce/core/config/theme/app_color.dart';
 import 'package:ecomerce/features/category/presentation/widget/category_list_card.dart';
 import 'package:ecomerce/features/product/presentation/widget/product_card.dart';
 import 'package:ecomerce/features/search/presentation/bloc/search_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -21,27 +21,11 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
-    // Fetch initial categories when the page loads
     context.read<SearchBloc>().add(FetchCategories());
   }
 
   @override
   Widget build(BuildContext context) {
-    // Define the border styles once to reuse them
-    final OutlineInputBorder roundedBorder = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(50.0), // Rounded radius
-      borderSide: const BorderSide(
-        color: AppColors.secondBackground, // Border color when not focused
-      ),
-    );
-
-    final OutlineInputBorder focusedRoundedBorder = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(50.0), // Rounded radius
-      borderSide: BorderSide(
-          color: Theme.of(context).primaryColor,
-          width: 1.5), // Border color when focused
-    );
-
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: BasicAppbar(
@@ -59,8 +43,13 @@ class _SearchPageState extends State<SearchPage> {
               decoration: BoxDecoration(
                   color: AppColors.secondBackground,
                   borderRadius: BorderRadius.circular(50)),
-              child: const Icon(Icons.arrow_back_ios_new,
-                  size: 15, color: Colors.white),
+              child: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.arrow_back_ios_new,
+                    size: 15, color: Colors.white),
+              ),
             ),
             const SizedBox(
               width: 10,
@@ -68,37 +57,17 @@ class _SearchPageState extends State<SearchPage> {
             SizedBox(
               width: 300,
               height: 50,
-              child: TextField(
+              child: SearchField(
                 controller: _searchController,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
-                  filled: true,
-                  fillColor: AppColors.secondBackground,
-                  hintText: 'Search',
-                  hintStyle: const TextStyle(color: Colors.white70),
-                  // Use the defined borders
-                  border: roundedBorder,
-                  enabledBorder: roundedBorder,
-                  focusedBorder: focusedRoundedBorder,
-                  prefixIcon: SvgPicture.asset(
-                    AppVectors.search,
-                    fit: BoxFit.none,
-                  ),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white),
-                    onPressed: () {
-                      _searchController.clear();
-                      // Return to the initial state showing categories
-                      context.read<SearchBloc>().add(FetchCategories());
-                    },
-                  ),
+                autofocus: true,
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.close, color: Colors.white),
+                  onPressed: () {
+                    _searchController.clear();
+                    context.read<SearchBloc>().add(FetchCategories());
+                  },
                 ),
-                onChanged: (query) {
-                  // Optional: Add debouncing here if you want live search
-                },
                 onSubmitted: (query) {
-                  // Trigger search when the user submits
                   if (query.isNotEmpty) {
                     context.read<SearchBloc>().add(SearchProducts(query));
                   }

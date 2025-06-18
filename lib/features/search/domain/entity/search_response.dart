@@ -1,7 +1,9 @@
-import 'package:ecomerce/features/category/domain/entity/category.dart';
+import 'package:ecomerce/features/product/domain/entity/product.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 class GeneralSearchResponseEntity {
-  final List<CategoryEntity>? categories;
+  @JsonKey(name: 'product')
+  final List<ProductEntity>? products;
 
-  GeneralSearchResponseEntity({this.categories});
+  const GeneralSearchResponseEntity({this.products});
 }

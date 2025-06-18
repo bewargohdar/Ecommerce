@@ -1,9 +1,12 @@
+import 'package:ecomerce/common/helper/navigator/app_navigator.dart';
+import 'package:ecomerce/common/widget/search.dart';
 import 'package:ecomerce/core/config/theme/app_color.dart';
 import 'package:ecomerce/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ecomerce/features/home/presentation/widget/categories.dart';
 import 'package:ecomerce/features/home/presentation/widget/categories_header.dart';
 import 'package:ecomerce/features/home/presentation/widget/header.dart';
-import 'package:ecomerce/common/widget/search.dart';
+import 'package:ecomerce/features/search/presentation/page/search_page.dart';
+
 import 'package:ecomerce/features/home/presentation/widget/top_selling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,40 +29,45 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
-            Padding(
+            const Padding(
               padding: EdgeInsets.symmetric(vertical: 24, horizontal: 24),
               child: Header(),
             ),
-            SearchField(),
-            SizedBox(
+            SearchField(
+              readOnly: true,
+              onTap: () {
+                AppNavigator.push(context, const SearchPage());
+              },
+            ),
+            const SizedBox(
               height: 10,
             ),
-            CategoriesHeader(
+            const CategoriesHeader(
               text: "Categories",
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-            Categories(),
-            SizedBox(
+            const Categories(),
+            const SizedBox(
               height: 10,
             ),
-            CategoriesHeader(
+            const CategoriesHeader(
               text: "Top Selling",
             ),
-            TopSelling(),
-            CategoriesHeader(
+            const TopSelling(),
+            const CategoriesHeader(
               text: 'New In',
               color: AppColors.primary,
             ),
-            TopSelling(),
+            const TopSelling(),
           ],
         ),
       ),

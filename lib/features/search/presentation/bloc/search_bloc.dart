@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:ecomerce/features/category/domain/entity/category.dart';
 import 'package:ecomerce/features/category/domain/usecase/get_categories.dart';
-import 'package:ecomerce/features/product/domain/entity/product.dart';
+import 'package:ecomerce/features/search/domain/entity/search_response.dart';
 import 'package:ecomerce/features/search/domain/usecase/search_products.dart';
 import 'package:equatable/equatable.dart';
 

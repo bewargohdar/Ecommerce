@@ -21,7 +21,7 @@ class SearchCategoriesLoaded extends SearchState {
 }
 
 class SearchProductsLoaded extends SearchState {
-  final List<ProductEntity> products;
+  final GeneralSearchResponseEntity products;
 
   const SearchProductsLoaded(this.products);
 

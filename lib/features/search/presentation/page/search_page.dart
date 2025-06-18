@@ -1,5 +1,6 @@
 import 'package:ecomerce/common/widget/appbar/app_bar.dart';
 import 'package:ecomerce/common/widget/search.dart';
+import 'package:ecomerce/core/config/assets/app_vectors.dart';
 
 import 'package:ecomerce/core/config/theme/app_color.dart';
 import 'package:ecomerce/features/category/presentation/widget/category_list_card.dart';
@@ -7,6 +8,7 @@ import 'package:ecomerce/features/product/presentation/widget/product_card.dart'
 import 'package:ecomerce/features/search/presentation/bloc/search_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -85,13 +87,23 @@ class _SearchPageState extends State<SearchPage> {
                     style: const TextStyle(color: Colors.white)));
           }
           if (state is SearchProductsLoaded) {
-            // Handle case where search yields no results
-            if (state.products.isEmpty) {
-              return const Center(
-                child: Text(
-                  'No products found.',
-                  style: TextStyle(color: Colors.white70),
-                ),
+            if (state.products.products!.isEmpty) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    AppVectors.notFound,
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text(
+                      "Sorry, we couldn't find any matching result for your Search.",
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
+                    ),
+                  )
+                ],
               );
             }
             return GridView.builder(
@@ -102,9 +114,9 @@ class _SearchPageState extends State<SearchPage> {
                 mainAxisSpacing: 16,
                 childAspectRatio: 0.7,
               ),
-              itemCount: state.products.length,
+              itemCount: state.products.products!.length,
               itemBuilder: (context, index) {
-                final product = state.products[index];
+                final product = state.products.products![index];
                 return ProductCard(product: product);
               },
             );

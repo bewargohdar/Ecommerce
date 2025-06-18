@@ -51,11 +51,8 @@ class _SearchPageState extends State<SearchPage> {
                     size: 15, color: Colors.white),
               ),
             ),
-            const SizedBox(
-              width: 10,
-            ),
             SizedBox(
-              width: 300,
+              width: 327,
               height: 50,
               child: SearchField(
                 controller: _searchController,

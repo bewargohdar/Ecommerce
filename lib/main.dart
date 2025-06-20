@@ -42,7 +42,6 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (context) => AuthBloc()),
           BlocProvider(create: (context) => SplashBloc()..add(AppStarted())),
-          // HomeBloc will be created lazily when needed
           BlocProvider(create: (context) => HomeBloc()),
           BlocProvider(create: (context) => sl<CategoryBloc>()),
           BlocProvider(create: (context) => sl<ProductBloc>()),

@@ -3,26 +3,12 @@ import 'package:ecomerce/features/search/presentation/widget/filter_chip_button.
 import 'package:ecomerce/features/search/presentation/widget/filter_counter_button.dart';
 import 'package:flutter/material.dart';
 
-class FilterBar extends StatefulWidget {
-  const FilterBar({super.key});
+class FilterBar extends StatelessWidget {
+  FilterBar({super.key});
 
-  @override
-  State<FilterBar> createState() => _FilterBarState();
-}
-
-class _FilterBarState extends State<FilterBar> {
   final Set<FilterType> _selectedFilters = {FilterType.price, FilterType.men};
-  final int _activeFilterCount = 2;
 
-  void _toggleFilter(FilterType filter) {
-    setState(() {
-      if (_selectedFilters.contains(filter)) {
-        _selectedFilters.remove(filter);
-      } else {
-        _selectedFilters.add(filter);
-      }
-    });
-  }
+  final int _activeFilterCount = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +28,7 @@ class _FilterBarState extends State<FilterBar> {
               (filter) => FilterChipButton(
                 label: filter.label,
                 isSelected: _selectedFilters.contains(filter),
-                onTap: () => _toggleFilter(filter),
+                onTap: () => {},
                 hasDropdown: filter.hasDropdown,
               ),
             )

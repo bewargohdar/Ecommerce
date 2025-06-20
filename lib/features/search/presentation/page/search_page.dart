@@ -115,7 +115,7 @@ class _SearchPageState extends State<SearchPage> {
             return Column(
               children: [
                 const SizedBox(height: 8),
-                const FilterBar(),
+                FilterBar(),
                 const SizedBox(height: 16),
                 Expanded(
                   child: GridView.builder(

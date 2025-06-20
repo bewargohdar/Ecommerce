@@ -8,4 +8,5 @@ class AppVectors {
   static const notFound = '${basePath}not_found$format';
   static const cartBag = '${basePath}cart_bag$format';
   static const filter = '${basePath}Vector.svg';
+  static const filterActive = '${basePath}back_arrow.svg';
 }

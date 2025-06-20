@@ -9,11 +9,11 @@ class FilterCounterButton extends StatelessWidget {
   final bool isSelected;
 
   const FilterCounterButton({
-    Key? key,
+    super.key,
     required this.count,
     required this.onTap,
     this.isSelected = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class FilterCounterButton extends StatelessWidget {
         child: Row(
           children: [
             SvgPicture.asset(
-              AppVectors.filter,
+              AppVectors.filterActive,
               colorFilter:
                   const ColorFilter.mode(Colors.white, BlendMode.srcIn),
               width: 14,

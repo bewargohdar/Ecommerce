@@ -8,12 +8,12 @@ class FilterChipButton extends StatelessWidget {
   final bool hasDropdown;
 
   const FilterChipButton({
-    Key? key,
+    super.key,
     required this.label,
     required this.isSelected,
     required this.onTap,
     this.hasDropdown = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

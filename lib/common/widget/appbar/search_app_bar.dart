@@ -8,6 +8,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   final ValueChanged<String>? onSubmitted;
   final bool autofocus;
   final bool hideBackButton;
+  final VoidCallback? onBackButtonPressed;
 
   const SearchAppBar({
     Key? key,
@@ -16,6 +17,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onSubmitted,
     this.autofocus = true,
     this.hideBackButton = false,
+    this.onBackButtonPressed,
   }) : super(key: key);
 
   @override
@@ -29,7 +31,8 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
               Padding(
                 padding: const EdgeInsets.only(right: 12.0),
                 child: CustomBackButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed:
+                      onBackButtonPressed ?? () => Navigator.pop(context),
                 ),
               ),
             Expanded(

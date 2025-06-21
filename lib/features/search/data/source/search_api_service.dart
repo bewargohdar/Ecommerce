@@ -12,5 +12,14 @@ abstract class SearchApiService {
 
   @GET('/products/search')
   Future<GeneralSearchResponseModel> searchProductsByName(
-      @Query('q') String productName);
+    @Query('q') String productName, {
+    @Query('isOnSale') bool? isOnSale,
+    @Query('gender') String? gender,
+    @Query('sortBy') String? sortBy,
+    @Query('minPrice') int? minPrice,
+    @Query('maxPrice') int? maxPrice,
+    @Query('category') String? category,
+    @Query('brand') String? brand,
+    @Query('minRating') double? minRating,
+  });
 }

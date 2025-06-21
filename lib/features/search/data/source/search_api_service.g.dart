@@ -21,10 +21,29 @@ class _SearchApiService implements SearchApiService {
 
   @override
   Future<GeneralSearchResponseModel> searchProductsByName(
-    String productName,
-  ) async {
+    String productName, {
+    bool? isOnSale,
+    String? gender,
+    String? sortBy,
+    int? minPrice,
+    int? maxPrice,
+    String? category,
+    String? brand,
+    double? minRating,
+  }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'q': productName};
+    final queryParameters = <String, dynamic>{
+      r'q': productName,
+      r'isOnSale': isOnSale,
+      r'gender': gender,
+      r'sortBy': sortBy,
+      r'minPrice': minPrice,
+      r'maxPrice': maxPrice,
+      r'category': category,
+      r'brand': brand,
+      r'minRating': minRating,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<GeneralSearchResponseModel>(

@@ -1,0 +1,2 @@
+/Users/bewar/new/Ecommerce/android/app/.cxx/Debug/596z4t17/x86/CMakeFiles/edit_cache.dir
+/Users/bewar/new/Ecommerce/android/app/.cxx/Debug/596z4t17/x86/CMakeFiles/rebuild_cache.dir

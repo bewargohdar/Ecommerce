@@ -1,18 +1,18 @@
 import 'package:ecomerce/core/config/theme/app_color.dart';
 import 'package:flutter/material.dart';
 
-class FilterChipButton extends StatelessWidget {
+class FilterListItem extends StatelessWidget {
   final String label;
   final bool isSelected;
   final VoidCallback onTap;
-  final bool hasDropdown;
+  final Widget? leading;
 
-  const FilterChipButton({
+  const FilterListItem({
     super.key,
     required this.label,
     required this.isSelected,
     required this.onTap,
-    this.hasDropdown = false,
+    this.leading,
   });
 
   @override
@@ -20,26 +20,32 @@ class FilterChipButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary : AppColors.secondBackground,
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              label,
-              style: const TextStyle(
+            if (leading != null) ...[
+              leading!,
+              const SizedBox(width: 12),
+            ],
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(
                   color: Colors.white,
+                  fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  fontSize: 11),
+                ),
+              ),
             ),
-            if (hasDropdown) ...[
-              const SizedBox(width: 4),
-              const Icon(Icons.keyboard_arrow_down,
-                  color: Colors.white, size: 16),
-            ]
+            if (isSelected)
+              const Icon(
+                Icons.check,
+                color: Colors.white,
+              ),
           ],
         ),
       ),

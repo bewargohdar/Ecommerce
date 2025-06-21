@@ -7,6 +7,7 @@ import 'package:ecomerce/features/auth/domain/usecase/is_logged_in.dart';
 import 'package:ecomerce/features/auth/domain/usecase/send_password_reset.dart';
 import 'package:ecomerce/features/auth/domain/usecase/signin.dart';
 import 'package:ecomerce/features/auth/domain/usecase/signup.dart';
+import 'package:ecomerce/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ecomerce/service_locator.dart';
 
 void setUpAuthDependencies() {
@@ -41,4 +42,11 @@ void setUpAuthDependencies() {
   sl.registerLazySingleton<GetUsers>(
     () => GetUsers(),
   );
+
+  sl.registerFactory<AuthBloc>(() => AuthBloc(
+        getAgesUseCase: sl(),
+        signinUsecase: sl(),
+        signupUsecase: sl(),
+        sendPasswordResetEmailUseCase: sl(),
+      ));
 }

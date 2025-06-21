@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:ecomerce/core/usecase/usecase.dart';
 import 'package:ecomerce/features/category/domain/entity/category.dart';
 import 'package:ecomerce/features/category/domain/usecase/get_categories.dart';
 import 'package:ecomerce/features/search/domain/entity/search_filter.dart';
@@ -24,7 +25,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   void _onFetchCategories(
       FetchCategories event, Emitter<SearchState> emit) async {
     emit(state.copyWith(status: SearchStatus.loading));
-    final result = await _getCategoriesUseCase.call();
+    final result = await _getCategoriesUseCase.call(null);
     result.fold(
       (failure) => emit(state.copyWith(
           status: SearchStatus.error, errorMessage: failure.toString())),
@@ -48,7 +49,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   void _onSearchSubmitted(
       SearchSubmitted event, Emitter<SearchState> emit) async {
     emit(state.copyWith(status: SearchStatus.loading));
-    final result = await _searchProductsUseCase.call(params: state.filter);
+    final result = await _searchProductsUseCase.call(state.filter);
     result.fold(
       (failure) => emit(state.copyWith(
           status: SearchStatus.error, errorMessage: failure.toString())),

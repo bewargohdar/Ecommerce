@@ -5,7 +5,7 @@ import 'package:ecomerce/service_locator.dart';
 
 class GetAgesUseCase implements Usecase<Either, dynamic> {
   @override
-  Future<Either> call({params}) async {
+  Future<Either> call(params) async {
     return await sl<AuthRepository>().getAges();
   }
 }

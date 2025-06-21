@@ -4,7 +4,7 @@ import 'package:ecomerce/service_locator.dart';
 
 class IsLoggedInUseCase implements Usecase<bool, dynamic> {
   @override
-  Future<bool> call({params}) async {
+  Future<bool> call(params) async {
     return await sl<AuthRepository>().isLoggedIn();
   }
 }

@@ -10,7 +10,7 @@ class GetCategories
   GetCategories(this.categoryRepo);
 
   @override
-  Future<Either<String, List<CategoryEntity>>> call({void params}) {
+  Future<Either<String, List<CategoryEntity>>> call(void params) {
     return categoryRepo.getCategories();
   }
 }

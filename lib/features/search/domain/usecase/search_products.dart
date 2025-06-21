@@ -12,7 +12,7 @@ class SearchProductsUseCase
 
   @override
   Future<Either<String, GeneralSearchResponseEntity>> call(
-      {SearchFilter? params}) {
+      SearchFilter? params) {
     return searchRepository.searchProducts(params!);
   }
 }

@@ -40,9 +40,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MultiBlocProvider(
         providers: [
-          BlocProvider(create: (context) => AuthBloc()),
-          BlocProvider(create: (context) => SplashBloc()..add(AppStarted())),
-          BlocProvider(create: (context) => HomeBloc()),
+          BlocProvider(create: (context) => sl<AuthBloc>()),
+          BlocProvider(
+              create: (context) => sl<SplashBloc>()..add(AppStarted())),
+          BlocProvider(create: (context) => sl<HomeBloc>()),
           BlocProvider(create: (context) => sl<CategoryBloc>()),
           BlocProvider(create: (context) => sl<ProductBloc>()),
           BlocProvider(create: (context) => sl<SearchBloc>()),

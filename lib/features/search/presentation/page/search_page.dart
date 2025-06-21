@@ -36,14 +36,13 @@ class _SearchPageState extends State<SearchPage> {
           context.read<SearchBloc>().add(FetchCategories());
         },
         onSubmitted: (query) {
-          if (query.isNotEmpty) {
-            context.read<SearchBloc>().add(SearchProducts(query));
-          }
+          context.read<SearchBloc>().add(SearchTermChanged(query));
+          context.read<SearchBloc>().add(SearchSubmitted());
         },
       ),
       body: BlocBuilder<SearchBloc, SearchState>(
         builder: (context, state) {
-          if (state is SearchLoading) {
+          if (state.status == SearchStatus.loading) {
             return const Center(
               child: CircularProgressIndicator(
                 color: AppColors.primary,
@@ -51,7 +50,7 @@ class _SearchPageState extends State<SearchPage> {
             );
           }
 
-          if (state is SearchError) {
+          if (state.status == SearchStatus.error) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -59,86 +58,22 @@ class _SearchPageState extends State<SearchPage> {
                   Icon(Icons.error_outline, size: 60, color: Colors.red[300]),
                   const SizedBox(height: 16),
                   Text(
-                    state.message,
+                    state.errorMessage!,
                     style: const TextStyle(color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 20),
                   TextButton(
                     onPressed: () =>
-                        context.read<SearchBloc>().add(FetchCategories()),
-                    child: const Text('Go Back to Categories'),
+                        context.read<SearchBloc>().add(SearchSubmitted()),
+                    child: const Text('Try Again'),
                   ),
                 ],
               ),
             );
           }
 
-          if (state is SearchProductsLoaded) {
-            if (state.products.products!.isEmpty) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    AppVectors.notFound,
-                    height: 200,
-                    width: 200,
-                  ),
-                  const SizedBox(height: 24),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 32),
-                    child: Text(
-                      "Sorry, we couldn't find any matching result for your Search.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 20,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  TextButton.icon(
-                    onPressed: () {
-                      _searchController.clear();
-                      context.read<SearchBloc>().add(FetchCategories());
-                    },
-                    icon: const Icon(Icons.refresh, color: AppColors.primary),
-                    label: const Text(
-                      'Browse Categories',
-                      style: TextStyle(color: AppColors.primary),
-                    ),
-                  ),
-                ],
-              );
-            }
-            return Column(
-              children: [
-                const SizedBox(height: 8),
-                FilterBar(),
-                const SizedBox(height: 16),
-                Expanded(
-                  child: GridView.builder(
-                    padding: const EdgeInsets.all(16),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                      childAspectRatio: 0.7,
-                    ),
-                    itemCount: state.products.products!.length,
-                    itemBuilder: (context, index) {
-                      final product = state.products.products![index];
-                      return ProductCard(product: product);
-                    },
-                  ),
-                ),
-              ],
-            );
-          }
-
-          if (state is SearchCategoriesLoaded) {
+          if (state.status == SearchStatus.categoriesLoaded) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -168,11 +103,62 @@ class _SearchPageState extends State<SearchPage> {
                 ),
                 Expanded(
                   child: ListView.builder(
-                    // Limiting to 5 as in the original code
-                    itemCount: 5.clamp(0, state.categories.length),
+                    itemCount: 5,
                     itemBuilder: (context, index) {
-                      final category = state.categories[index];
+                      final category = state.categories![index];
                       return CategoryListCard(category: category);
+                    },
+                  ),
+                ),
+              ],
+            );
+          }
+
+          if (state.status == SearchStatus.loaded) {
+            if (state.products!.products!.isEmpty) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    AppVectors.notFound,
+                    height: 200,
+                    width: 200,
+                  ),
+                  const SizedBox(height: 24),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 32),
+                    child: Text(
+                      "Sorry, we couldn't find any matching result for your Search.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }
+            return Column(
+              children: [
+                const SizedBox(height: 8),
+                FilterBar(),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: GridView.builder(
+                    padding: const EdgeInsets.all(16),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: 0.7,
+                    ),
+                    itemCount: state.products!.products!.length,
+                    itemBuilder: (context, index) {
+                      final product = state.products!.products![index];
+                      return ProductCard(product: product);
                     },
                   ),
                 ),

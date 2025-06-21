@@ -9,11 +9,22 @@ abstract class SearchEvent extends Equatable {
 
 class FetchCategories extends SearchEvent {}
 
-class SearchProducts extends SearchEvent {
-  final String query;
+class SearchTermChanged extends SearchEvent {
+  final String term;
 
-  const SearchProducts(this.query);
+  const SearchTermChanged(this.term);
 
   @override
-  List<Object> get props => [query];
+  List<Object> get props => [term];
 }
+
+class FilterChanged extends SearchEvent {
+  final SearchFilter filter;
+
+  const FilterChanged(this.filter);
+
+  @override
+  List<Object> get props => [filter];
+}
+
+class SearchSubmitted extends SearchEvent {}

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:ecomerce/features/category/domain/entity/category.dart';
 import 'package:ecomerce/features/category/domain/usecase/get_categories.dart';
+import 'package:ecomerce/features/search/domain/entity/search_filter.dart';
 import 'package:ecomerce/features/search/domain/entity/search_response.dart';
 import 'package:ecomerce/features/search/domain/usecase/search_products.dart';
 import 'package:equatable/equatable.dart';
@@ -9,32 +10,50 @@ part 'search_event.dart';
 part 'search_state.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
-  final GetCategories _getCategoriesUseCase;
   final SearchProductsUseCase _searchProductsUseCase;
+  final GetCategories _getCategoriesUseCase;
 
-  SearchBloc(this._getCategoriesUseCase, this._searchProductsUseCase)
-      : super(SearchInitial()) {
+  SearchBloc(this._searchProductsUseCase, this._getCategoriesUseCase)
+      : super(const SearchState()) {
     on<FetchCategories>(_onFetchCategories);
-    on<SearchProducts>(_onSearchProducts);
+    on<SearchTermChanged>(_onSearchTermChanged);
+    on<FilterChanged>(_onFilterChanged);
+    on<SearchSubmitted>(_onSearchSubmitted);
   }
 
   void _onFetchCategories(
       FetchCategories event, Emitter<SearchState> emit) async {
-    emit(SearchLoading());
+    emit(state.copyWith(status: SearchStatus.loading));
     final result = await _getCategoriesUseCase.call();
     result.fold(
-      (failure) => emit(SearchError(failure.toString())),
-      (categories) => emit(SearchCategoriesLoaded(categories)),
+      (failure) => emit(state.copyWith(
+          status: SearchStatus.error, errorMessage: failure.toString())),
+      (categories) => emit(state.copyWith(
+          status: SearchStatus.categoriesLoaded, categories: categories)),
     );
   }
 
-  void _onSearchProducts(
-      SearchProducts event, Emitter<SearchState> emit) async {
-    emit(SearchLoading());
-    final result = await _searchProductsUseCase.call(params: event.query);
+  void _onSearchTermChanged(
+      SearchTermChanged event, Emitter<SearchState> emit) {
+    emit(state.copyWith(
+        filter: state.filter.copyWith(query: () => event.term),
+        status: SearchStatus.initial));
+  }
+
+  void _onFilterChanged(FilterChanged event, Emitter<SearchState> emit) {
+    emit(state.copyWith(filter: event.filter, status: SearchStatus.initial));
+    add(SearchSubmitted());
+  }
+
+  void _onSearchSubmitted(
+      SearchSubmitted event, Emitter<SearchState> emit) async {
+    emit(state.copyWith(status: SearchStatus.loading));
+    final result = await _searchProductsUseCase.call(params: state.filter);
     result.fold(
-      (failure) => emit(SearchError(failure.toString())),
-      (products) => emit(SearchProductsLoaded(products)),
+      (failure) => emit(state.copyWith(
+          status: SearchStatus.error, errorMessage: failure.toString())),
+      (products) =>
+          emit(state.copyWith(status: SearchStatus.loaded, products: products)),
     );
   }
 }

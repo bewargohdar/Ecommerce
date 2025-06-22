@@ -1,8 +1,14 @@
 part of 'home_bloc.dart';
 
-@immutable
-sealed class HomeEvent {}
+sealed class HomeEvent extends Equatable {
+  const HomeEvent();
 
-class FetchUserInfo extends HomeEvent {}
+  @override
+  List<Object> get props => [];
+}
 
-class FetchCategories extends HomeEvent {}
+final class FetchHomeData extends HomeEvent {}
+
+final class FetchUserInfo extends HomeEvent {}
+
+final class FetchCategories extends HomeEvent {}

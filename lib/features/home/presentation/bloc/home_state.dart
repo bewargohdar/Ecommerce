@@ -1,67 +1,43 @@
 part of 'home_bloc.dart';
 
-@immutable
-sealed class HomeState {}
-
-final class HomeInitial extends HomeState {}
-
-final class HomeLoading extends HomeState {}
-
-final class HomeLoaded extends HomeState {
-  final UserEntity user;
-
-  HomeLoaded(this.user);
-}
-
-final class HomeError extends HomeState {
-  final String message;
-
-  HomeError(this.message);
-}
-
-final class CategoriesLoaded extends HomeState {
-  final List<CategoryEntity> categories;
-
-  CategoriesLoaded(this.categories);
-}
-
-// New composite state that can hold both user and categories data
-final class HomeDataLoaded extends HomeState {
+class HomeState extends Equatable {
+  final HomeEntity? homeEntity;
   final UserEntity? user;
   final List<CategoryEntity>? categories;
-  final bool isLoadingUser;
-  final bool isLoadingCategories;
-  final String? userError;
-  final String? categoriesError;
+  final bool isLoading;
+  final String? error;
 
-  HomeDataLoaded({
+  const HomeState({
+    this.homeEntity,
     this.user,
     this.categories,
-    this.isLoadingUser = false,
-    this.isLoadingCategories = false,
-    this.userError,
-    this.categoriesError,
+    this.isLoading = false,
+    this.error,
   });
 
-  HomeDataLoaded copyWith({
+  HomeState copyWith({
+    HomeEntity? homeEntity,
     UserEntity? user,
     List<CategoryEntity>? categories,
-    bool? isLoadingUser,
-    bool? isLoadingCategories,
-    String? userError,
-    String? categoriesError,
-    bool clearUserError = false,
-    bool clearCategoriesError = false,
+    bool? isLoading,
+    String? error,
+    bool clearError = false,
   }) {
-    return HomeDataLoaded(
+    return HomeState(
+      homeEntity: homeEntity ?? this.homeEntity,
       user: user ?? this.user,
       categories: categories ?? this.categories,
-      isLoadingUser: isLoadingUser ?? this.isLoadingUser,
-      isLoadingCategories: isLoadingCategories ?? this.isLoadingCategories,
-      userError: clearUserError ? null : (userError ?? this.userError),
-      categoriesError: clearCategoriesError
-          ? null
-          : (categoriesError ?? this.categoriesError),
+      isLoading: isLoading ?? this.isLoading,
+      error: clearError ? null : error ?? this.error,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        homeEntity,
+        user,
+        categories,
+        isLoading,
+        error,
+      ];
 }

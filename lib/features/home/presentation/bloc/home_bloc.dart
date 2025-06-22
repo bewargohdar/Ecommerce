@@ -1,84 +1,62 @@
 import 'package:bloc/bloc.dart';
+import 'package:ecomerce/core/usecase/usecase.dart';
+import 'package:ecomerce/features/auth/domain/entity/user_entity.dart';
 import 'package:ecomerce/features/auth/domain/usecase/get_users.dart';
 import 'package:ecomerce/features/category/domain/entity/category.dart';
 import 'package:ecomerce/features/category/domain/usecase/get_categories.dart';
-import 'package:meta/meta.dart';
-
-import '../../../../service_locator.dart';
-import '../../../auth/domain/entity/user_entity.dart';
+import 'package:ecomerce/features/home/domain/entity/home.dart';
+import 'package:ecomerce/features/home/domain/usecase/get_home_data.dart';
+import 'package:equatable/equatable.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  final GetUsers getUsers = sl<GetUsers>();
-  final GetCategories getCategories = sl<GetCategories>();
+  final GetUsers getUsers;
+  final GetCategories getCategories;
+  final GetHomeData getHomeData;
 
-  HomeBloc() : super(HomeDataLoaded()) {
+  HomeBloc({
+    required this.getUsers,
+    required this.getCategories,
+    required this.getHomeData,
+  }) : super(const HomeState()) {
     on<FetchUserInfo>(_fetchUserInfo);
     on<FetchCategories>(_fetchCategories);
+    on<FetchHomeData>(_fetchHomeData);
   }
 
   Future<void> _fetchUserInfo(
       FetchUserInfo event, Emitter<HomeState> emit) async {
-    // Get current state
-    final currentState = state;
-    if (currentState is HomeDataLoaded) {
-      emit(currentState.copyWith(isLoadingUser: true, clearUserError: true));
-    } else {
-      emit(HomeDataLoaded(isLoadingUser: true));
-    }
+    emit(state.copyWith(isLoading: true));
+    var returnedData = await getUsers.call(NoParams());
+    returnedData.fold(
+      (error) =>
+          emit(state.copyWith(isLoading: false, error: error.toString())),
+      (data) => emit(state.copyWith(isLoading: false, user: data)),
+    );
+  }
 
-    var returnedData = await getUsers.call();
-    final newCurrentState = state;
-
-    returnedData.fold((error) {
-      if (newCurrentState is HomeDataLoaded) {
-        emit(newCurrentState.copyWith(
-          isLoadingUser: false,
-          userError: error.toString(),
-        ));
-      }
-    }, (data) {
-      if (newCurrentState is HomeDataLoaded) {
-        emit(newCurrentState.copyWith(
-          user: data,
-          isLoadingUser: false,
-          clearUserError: true,
-        ));
-      }
-    });
+  Future<void> _fetchHomeData(
+      FetchHomeData event, Emitter<HomeState> emit) async {
+    emit(state.copyWith(isLoading: true));
+    var result = await getHomeData.call(NoParams());
+    result.fold(
+      (failure) =>
+          emit(state.copyWith(isLoading: false, error: failure.toString())),
+      (homeEntity) =>
+          emit(state.copyWith(isLoading: false, homeEntity: homeEntity)),
+    );
   }
 
   Future<void> _fetchCategories(
       FetchCategories event, Emitter<HomeState> emit) async {
-    // Get current state
-    final currentState = state;
-    if (currentState is HomeDataLoaded) {
-      emit(currentState.copyWith(
-          isLoadingCategories: true, clearCategoriesError: true));
-    } else {
-      emit(HomeDataLoaded(isLoadingCategories: true));
-    }
-
-    var returnedData = await getCategories.call();
-    final newCurrentState = state;
-
-    returnedData.fold((error) {
-      if (newCurrentState is HomeDataLoaded) {
-        emit(newCurrentState.copyWith(
-          isLoadingCategories: false,
-          categoriesError: error.toString(),
-        ));
-      }
-    }, (data) {
-      if (newCurrentState is HomeDataLoaded) {
-        emit(newCurrentState.copyWith(
-          categories: data,
-          isLoadingCategories: false,
-          clearCategoriesError: true,
-        ));
-      }
-    });
+    emit(state.copyWith(isLoading: true));
+    var returnedData = await getCategories.call(NoParams());
+    returnedData.fold(
+      (error) =>
+          emit(state.copyWith(isLoading: false, error: error.toString())),
+      (data) => emit(state.copyWith(isLoading: false, categories: data)),
+    );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:ecomerce/common/helper/navigator/app_navigator.dart';
+import 'package:ecomerce/common/widget/product/product_carousel.dart';
 import 'package:ecomerce/common/widget/search.dart';
 import 'package:ecomerce/core/config/theme/app_color.dart';
 import 'package:ecomerce/features/home/presentation/bloc/home_bloc.dart';
@@ -7,7 +8,6 @@ import 'package:ecomerce/features/home/presentation/widget/categories_header.dar
 import 'package:ecomerce/features/home/presentation/widget/header.dart';
 import 'package:ecomerce/features/search/presentation/page/search_page.dart';
 
-import 'package:ecomerce/features/home/presentation/widget/top_selling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
+    context.read<HomeBloc>().add(FetchHomeData());
     context.read<HomeBloc>().add(FetchUserInfo());
     context.read<HomeBloc>().add(FetchCategories());
   }
@@ -49,25 +49,47 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(
               height: 10,
             ),
-            const CategoriesHeader(
-              text: "Categories",
+            BlocBuilder<HomeBloc, HomeState>(
+              builder: (context, state) {
+                if (state.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (state.error != null) {
+                  return Center(child: Text(state.error!));
+                }
+
+                return Column(
+                  children: [
+                    if (state.categories != null) ...[
+                      const CategoriesHeader(
+                        text: "Categories",
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Categories(
+                        categories: state.categories!,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                    if (state.homeEntity != null) ...[
+                      const CategoriesHeader(
+                        text: "Top Selling",
+                      ),
+                      ProductCarousel(
+                          products: state.homeEntity!.topSellingProducts),
+                      const CategoriesHeader(
+                        text: 'New In',
+                        color: AppColors.primary,
+                      ),
+                      ProductCarousel(products: state.homeEntity!.newArrivals),
+                    ]
+                  ],
+                );
+              },
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Categories(),
-            const SizedBox(
-              height: 10,
-            ),
-            const CategoriesHeader(
-              text: "Top Selling",
-            ),
-            const TopSelling(),
-            const CategoriesHeader(
-              text: 'New In',
-              color: AppColors.primary,
-            ),
-            const TopSelling(),
           ],
         ),
       ),

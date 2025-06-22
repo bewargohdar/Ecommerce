@@ -18,7 +18,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     final result = await getCategories(event);
 
     result.fold(
-      (error) => emit(CategoryError(error)),
+      (error) => emit(CategoryError(error.toString())),
       (categories) => emit(CategoryLoaded(categories)),
     );
   }

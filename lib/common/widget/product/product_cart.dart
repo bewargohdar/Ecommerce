@@ -1,10 +1,14 @@
-import 'package:ecomerce/core/config/assets/app_images.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecomerce/core/config/theme/app_color.dart';
 import 'package:flutter/material.dart';
 
+import '../../../features/product/domain/entity/product.dart';
+
 class ProductCart extends StatelessWidget {
+  final ProductEntity? product;
   const ProductCart({
     super.key,
+    this.product,
   });
 
   @override
@@ -21,23 +25,24 @@ class ProductCart extends StatelessWidget {
           Expanded(
             flex: 4,
             child: Container(
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: Colors.white,
                 image: DecorationImage(
-                  image: AssetImage(AppImages.profile),
+                  image: CachedNetworkImageProvider(product?.thumbnail ??
+                      'https://i.dummyjson.com/data/products/1/thumbnail.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
             ),
           ),
-          const Expanded(
+          Expanded(
             flex: 1,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Mohair Blouse',
-                  style: TextStyle(
+                  product?.title ?? 'Mohair Blouse',
+                  style: const TextStyle(
                       fontSize: 12,
                       overflow: TextOverflow.ellipsis,
                       fontWeight: FontWeight.w300),
@@ -45,18 +50,18 @@ class ProductCart extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '\$100',
-                      style: TextStyle(
+                      '\$${product?.price.toStringAsFixed(0)}',
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w300,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     Text(
-                      '\$120',
-                      style: TextStyle(
+                      '\$${((product?.price ?? 0) * (1 + (product?.discountPercentage ?? 0) / 100)).toStringAsFixed(0)}',
+                      style: const TextStyle(
                           fontSize: 12,
                           color: Colors.grey,
                           fontWeight: FontWeight.w300,

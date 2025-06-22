@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:ecomerce/core/usecase/usecase.dart';
 import 'package:ecomerce/features/category/domain/entity/category.dart';
 import 'package:ecomerce/features/category/domain/usecase/get_categories.dart';
 import 'package:ecomerce/features/search/domain/entity/search_filter.dart';

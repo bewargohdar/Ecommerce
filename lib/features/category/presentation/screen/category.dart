@@ -3,6 +3,7 @@ import 'package:ecomerce/common/widget/appbar/app_bar.dart';
 import 'package:ecomerce/features/category/presentation/bloc/category_bloc.dart';
 
 import 'package:ecomerce/features/category/presentation/widget/category_list_card.dart';
+import 'package:ecomerce/features/product/presentation/page/products_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -47,7 +48,18 @@ class _CategoryPageState extends State<CategoryPage> {
                       itemCount: 5,
                       itemBuilder: (context, index) {
                         final category = state.categories[index];
-                        return CategoryListCard(category: category);
+                        return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProductsPage(
+                                    categoryName: category.slug,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: CategoryListCard(category: category));
                       },
                     );
                   } else if (state is CategoryError) {

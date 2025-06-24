@@ -2,10 +2,9 @@ import 'package:ecomerce/common/helper/navigator/app_navigator.dart';
 import 'package:ecomerce/core/config/assets/app_vectors.dart';
 import 'package:ecomerce/core/config/theme/app_color.dart';
 import 'package:ecomerce/features/auth/presentation/page/signin_page.dart';
-import 'package:ecomerce/features/home/presentation/page/home.dart';
 import 'package:ecomerce/features/splash/bloc/splash_bloc.dart';
-
 import 'package:ecomerce/features/splash/bloc/splash_state.dart';
+import 'package:ecomerce/features/tabs/presentation/page/tabs_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -18,7 +17,7 @@ class Splash extends StatelessWidget {
     return BlocListener<SplashBloc, SplashState>(
       listener: (context, state) {
         if (state is Authenticated) {
-          AppNavigator.pushReplacement(context, const HomePage());
+          AppNavigator.pushReplacement(context, const TabsPage());
         }
         if (state is UnAuthenticated) {
           AppNavigator.pushReplacement(context, SigninPage());

@@ -1,6 +1,8 @@
 import 'package:ecomerce/core/config/theme/app_color.dart';
+import 'package:ecomerce/features/cart/presentation/page/cart_page.dart';
 import 'package:ecomerce/features/category/presentation/screen/category.dart';
 import 'package:ecomerce/features/home/presentation/page/home.dart';
+import 'package:ecomerce/features/profile/presentation/page/profile_page.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -40,6 +42,8 @@ class _TabsPageState extends State<TabsPage> {
   List<Widget> get pages => <Widget>[
         const HomePage(),
         const CategoryPage(),
+        const CartPage(),
+        const ProfilePage(),
       ];
 
   List<_TabItemConst> get tabs => <_TabItemConst>[
@@ -54,6 +58,18 @@ class _TabsPageState extends State<TabsPage> {
           icon: 'assets/vectors/discover.svg',
           isActive: activeTab == 1,
           onTap: () => setState(() => activeTab = 1),
+        ),
+        _TabItemConst(
+          label: "Cart",
+          icon: 'assets/vectors/cart_bag.svg',
+          isActive: activeTab == 2,
+          onTap: () => setState(() => activeTab = 2),
+        ),
+        _TabItemConst(
+          label: "Profile",
+          icon: 'assets/vectors/profile.svg',
+          isActive: activeTab == 3,
+          onTap: () => setState(() => activeTab = 3),
         ),
       ];
 }

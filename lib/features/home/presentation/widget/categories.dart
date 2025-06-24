@@ -1,8 +1,10 @@
 import 'package:ecomerce/common/helper/category_image_helper.dart';
 import 'package:ecomerce/features/category/domain/entity/category.dart';
 import 'package:ecomerce/common/helper/navigator/app_navigator.dart';
+import 'package:ecomerce/features/product/presentation/bloc/product_bloc.dart';
 import 'package:ecomerce/features/product/presentation/page/products_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Categories extends StatelessWidget {
   final List<CategoryEntity> categories;
@@ -24,6 +26,9 @@ class Categories extends StatelessWidget {
 
           return GestureDetector(
             onTap: () {
+              context
+                  .read<ProductBloc>()
+                  .add(FetchProductsByCategoryEvent(category.slug));
               AppNavigator.push(
                   context,
                   ProductsPage(

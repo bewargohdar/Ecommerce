@@ -1,4 +1,3 @@
-import 'package:ecomerce/common/widget/product/product_cart.dart';
 import 'package:ecomerce/features/product/domain/entity/product.dart';
 import 'package:ecomerce/features/product/presentation/widget/product_card.dart';
 import 'package:flutter/material.dart';

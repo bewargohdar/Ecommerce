@@ -9,4 +9,8 @@ class AppVectors {
   static const cartBag = '${basePath}cart_bag$format';
   static const filter = '${basePath}Vector.svg';
   static const filterActive = '${basePath}back_arrow.svg';
+  static const profile = '${basePath}profile.svg';
+  static const home = '${basePath}home.svg';
+  static const cart = '${basePath}cart.svg';
+  static const notification = '${basePath}notification.svg';
 }

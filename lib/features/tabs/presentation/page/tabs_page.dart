@@ -1,3 +1,4 @@
+import 'package:ecomerce/core/config/assets/app_vectors.dart';
 import 'package:ecomerce/core/config/theme/app_color.dart';
 import 'package:ecomerce/features/cart/presentation/page/cart_page.dart';
 import 'package:ecomerce/features/category/presentation/screen/category.dart';
@@ -48,26 +49,22 @@ class _TabsPageState extends State<TabsPage> {
 
   List<_TabItemConst> get tabs => <_TabItemConst>[
         _TabItemConst(
-          label: "Home",
-          icon: 'assets/vectors/home.svg',
+          icon: AppVectors.home,
           isActive: activeTab == 0,
           onTap: () => setState(() => activeTab = 0),
         ),
         _TabItemConst(
-          label: "Categories",
-          icon: 'assets/vectors/discover.svg',
+          icon: AppVectors.notification,
           isActive: activeTab == 1,
           onTap: () => setState(() => activeTab = 1),
         ),
         _TabItemConst(
-          label: "Cart",
-          icon: 'assets/vectors/cart_bag.svg',
+          icon: AppVectors.cart,
           isActive: activeTab == 2,
           onTap: () => setState(() => activeTab = 2),
         ),
         _TabItemConst(
-          label: "Profile",
-          icon: 'assets/vectors/profile.svg',
+          icon: AppVectors.profile,
           isActive: activeTab == 3,
           onTap: () => setState(() => activeTab = 3),
         ),
@@ -93,14 +90,6 @@ class _TabItem extends StatelessWidget {
             colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
           ),
           const SizedBox(height: 4),
-          Text(
-            tab.label,
-            style: TextStyle(
-              color: color,
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
         ],
       ),
     );
@@ -109,13 +98,11 @@ class _TabItem extends StatelessWidget {
 
 class _TabItemConst {
   const _TabItemConst({
-    required this.label,
     required this.icon,
     required this.isActive,
     this.onTap,
   });
 
-  final String label;
   final String icon;
   final bool isActive;
   final Function()? onTap;

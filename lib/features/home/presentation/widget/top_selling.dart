@@ -1,4 +1,4 @@
-import 'package:ecomerce/common/widget/product/product_cart.dart';
+import 'package:ecomerce/features/product/presentation/widget/product_card.dart';
 import 'package:flutter/material.dart';
 
 import '../../../product/domain/entity/product.dart';
@@ -22,7 +22,7 @@ class TopSelling extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           itemBuilder: (context, index) {
-            return ProductCart(
+            return ProductCard(
               product: products[index],
             );
           }),

@@ -27,7 +27,7 @@ class Categories extends StatelessWidget {
               AppNavigator.push(
                   context,
                   ProductsPage(
-                    categoryName: category.name,
+                    categoryName: category.slug,
                   ));
             },
             child: Column(

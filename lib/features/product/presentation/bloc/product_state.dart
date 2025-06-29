@@ -1,20 +1,33 @@
 part of 'product_bloc.dart';
 
 @immutable
-sealed class ProductState {}
-
-final class ProductInitial extends ProductState {}
-
-final class ProductLoading extends ProductState {}
-
-final class ProductLoaded extends ProductState {
+class ProductState extends Equatable {
   final List<ProductEntity> products;
+  final ProductDetailEntity? productDetail;
+  final bool isLoading;
+  final String? error;
 
-  ProductLoaded(this.products);
-}
+  const ProductState({
+    this.products = const [],
+    this.productDetail,
+    this.isLoading = false,
+    this.error,
+  });
 
-final class ProductError extends ProductState {
-  final String message;
+  ProductState copyWith({
+    List<ProductEntity>? products,
+    ProductDetailEntity? productDetail,
+    bool? isLoading,
+    String? error,
+  }) {
+    return ProductState(
+      products: products ?? this.products,
+      productDetail: productDetail ?? this.productDetail,
+      isLoading: isLoading ?? this.isLoading,
+      error: error ?? this.error,
+    );
+  }
 
-  ProductError(this.message);
+  @override
+  List<Object?> get props => [products, productDetail, isLoading, error];
 }

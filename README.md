@@ -16,10 +16,12 @@ A modern, feature-rich e-commerce mobile application built with Flutter and Fire
 - **Product Categories** - Dynamic category browsing with Firebase integration
 - **Product Search** - Advanced search functionality
 - **Top Selling Products** - Featured product recommendations
-- **Product Cart** - Modern product display cards
+- **New Arrivals** - Browse the latest products
+- **Product Cart** - Add, remove, and manage products in the shopping cart
+- **Product Details** - View detailed information about each product
+- **Notifications** - Receive updates and alerts
 
 ### Technical Features
-- **Offline Support** - Local data caching capabilities
 - **Multi-Platform** - Android, iOS, Web, Windows, macOS, and Linux support
 - **Real-time Updates** - Firebase Firestore real-time data sync
 - **Error Handling** - Comprehensive error management with user feedback
@@ -88,21 +90,47 @@ lib/
     │       └── bloc/                   # Auth state management
     │
     ├── home/                          # Home/Dashboard feature
-    │   ├── presentation/
-    │   │   ├── page/                   # Home screen
-    │   │   ├── widget/                 # Home widgets
-    │   │   └── bloc/                   # Home state management
+    │   ├── data/
+    │   ├── domain/
+    │   └── presentation/
+    │       ├── page/                   # Home screen
+    │       ├── widget/                 # Home widgets
+    │       └── bloc/                   # Home state management
     │
-    └── category/                      # Product categories
-        ├── data/
-        │   ├── model/                  # Category models
-        │   ├── source/                 # Category API service
-        │   └── repository/             # Category repository
-        ├── domain/
-        │   ├── entity/                 # Category entities
-        │   ├── repository/             # Category repository interface
-        │   └── usecase/                # Category use cases
-        └── presentation/               # Category UI (if needed)
+    ├── category/                      # Product categories
+    │   ├── data/
+    │   │   ├── model/                  # Category models
+    │   │   ├── source/                 # Category API service
+    │   │   └── repository/             # Category repository
+    │   ├── domain/
+    │   │   ├── entity/                 # Category entities
+    │   │   ├── repository/             # Category repository interface
+    │   │   └── usecase/                # Category use cases
+    │   └── presentation/               # Category UI (if needed)
+    │
+    ├── product/                       # Product details
+    │   ├── data/
+    │   ├── domain/
+    │   └── presentation/
+    │
+    ├── cart/                          # Shopping cart
+    │   └── presentation/
+    │
+    ├── search/                        # Search functionality
+    │   ├── data/
+    │   ├── domain/
+    │   └── presentation/
+    │
+    ├── profile/                       # User profile
+    │   └── presentation/
+    │
+    ├── notification/                  # Notifications
+    │   ├── data/
+    │   ├── domain/
+    │   └── presentation/
+    │
+    ├── tabs/                          # Main tab navigation
+    │   └── presentation/
 
 assets/                                # App assets
 ├── fonts/                             # Custom fonts (CircularStd family)
@@ -241,7 +269,6 @@ flutter test
 
 ## 🔮 Future Enhancements
 
-- Shopping cart functionality
 - Payment integration
 - Order management
 - Push notifications

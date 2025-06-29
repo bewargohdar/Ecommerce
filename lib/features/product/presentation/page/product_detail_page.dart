@@ -2,9 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecomerce/common/widget/appbar/app_bar.dart';
 import 'package:ecomerce/core/config/assets/app_vectors.dart';
 import 'package:ecomerce/core/config/theme/app_color.dart';
+import 'package:ecomerce/features/product/domain/entity/product.dart';
 import 'package:ecomerce/features/product/presentation/bloc/product_bloc.dart';
 import 'package:ecomerce/features/product/presentation/widget/info_block.dart';
 import 'package:ecomerce/features/product/presentation/widget/review_card.dart';
+import 'package:ecomerce/features/product/presentation/widget/selection_bottom_sheets.dart';
 import 'package:ecomerce/features/product/presentation/widget/setting_option_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,9 +22,19 @@ class ProductDetailPage extends StatefulWidget {
 }
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
+  SizeOption _selectedSize = SizeOption.S;
+  final List<Color> _availableColors = [
+    Colors.green,
+    const Color(0xFF3C415C),
+    const Color(0xFF5C3C3C),
+    const Color(0xFFC8A364)
+  ];
+  late Color _selectedColor;
+
   @override
   void initState() {
     super.initState();
+    _selectedColor = _availableColors[0];
     context.read<ProductBloc>().add(GetProductDetailEvent(widget.productId));
   }
 
@@ -111,40 +123,65 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                         ),
                                       ),
                                       const SizedBox(height: 24),
-                                      const SettingOptionTile(
-                                        title: 'Size',
-                                        child: Row(
-                                          children: [
-                                            Text('S',
-                                                style: const TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.w500)),
-                                            const SizedBox(width: 8),
-                                            const Icon(
-                                                Icons.keyboard_arrow_down),
-                                          ],
+                                      GestureDetector(
+                                        onTap: () => showSizeSelectionSheet(
+                                          context,
+                                          currentSize: _selectedSize,
+                                          onSizeSelected: (size) {
+                                            setState(() {
+                                              _selectedSize = size;
+                                            });
+                                          },
+                                        ),
+                                        child: SettingOptionTile(
+                                          title: 'Size',
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                  _selectedSize
+                                                      .toString()
+                                                      .split('.')
+                                                      .last,
+                                                  style: const TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w500)),
+                                              const SizedBox(width: 8),
+                                              const Icon(
+                                                  Icons.keyboard_arrow_down),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                       const SizedBox(height: 12),
-                                      SettingOptionTile(
-                                        title: 'Color',
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              width: 20,
-                                              height: 20,
-                                              decoration: BoxDecoration(
-                                                color: Colors.green,
-                                                shape: BoxShape.circle,
+                                      GestureDetector(
+                                        onTap: () => showColorSelectionSheet(
+                                          context,
+                                          availableColors: _availableColors,
+                                          currentColor: _selectedColor,
+                                          onColorSelected: (color) {
+                                            setState(() {
+                                              _selectedColor = color;
+                                            });
+                                          },
+                                        ),
+                                        child: SettingOptionTile(
+                                          title: 'Color',
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width: 24,
+                                                height: 24,
+                                                decoration: BoxDecoration(
+                                                  color: _selectedColor,
+                                                  shape: BoxShape.circle,
+                                                ),
                                               ),
-                                              margin: const EdgeInsets.only(
-                                                  right: 8),
-                                            ),
-                                            const SizedBox(width: 8),
-                                            const Icon(
-                                                Icons.keyboard_arrow_down),
-                                          ],
+                                              const SizedBox(width: 8),
+                                              const Icon(
+                                                  Icons.keyboard_arrow_down),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                       const SizedBox(height: 12),
@@ -283,7 +320,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         ),
                         const SizedBox(width: 10),
                         const Text(
-                          'Add to Cart',
+                          'Add to Bag',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.white,

@@ -113,3 +113,6 @@ class ProductEntity {
     required this.thumbnail,
   });
 }
+
+// Define an enum for sizes
+enum SizeOption { S, M, L, XL, XXL }

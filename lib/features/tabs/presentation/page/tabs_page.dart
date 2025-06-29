@@ -28,7 +28,7 @@ class _TabsPageState extends State<TabsPage> {
           child: ColoredBox(
             color: AppColors.background,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: tabs.map((tab) => _TabItem(tab: tab)).toList(),

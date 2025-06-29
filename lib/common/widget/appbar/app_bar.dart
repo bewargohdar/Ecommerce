@@ -33,7 +33,20 @@ class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {
 
       leadingWidth: leadingWidth ?? 56, // Control the width of leading widget
       titleSpacing: titleSpacing ?? 0,
-      actions: [action ?? Container()],
+      actions: [
+        action != null
+            ? Container(
+                height: 40,
+                width: 40,
+                margin: const EdgeInsets.only(right: 10),
+                decoration: BoxDecoration(
+                  color: AppColors.secondBackground,
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: Center(child: action),
+              )
+            : Container()
+      ],
       leading: hideBack
           ? null
           : IconButton(

@@ -80,6 +80,9 @@ class _HomePageState extends State<HomePage> {
                       ),
                       ProductCarousel(
                           products: state.homeEntity!.topSellingProducts),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       const CategoriesHeader(
                         text: 'New In',
                         color: AppColors.primary,

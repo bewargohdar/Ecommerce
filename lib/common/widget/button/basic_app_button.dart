@@ -1,3 +1,4 @@
+import 'package:ecomerce/core/config/theme/app_color.dart';
 import 'package:flutter/material.dart';
 
 class BasicAppButton extends StatelessWidget {
@@ -6,12 +7,16 @@ class BasicAppButton extends StatelessWidget {
   final Widget? content;
   final double? height;
   final double? width;
+  final Color? color;
+  final double? radius;
   const BasicAppButton(
       {required this.onPressed,
       this.title = '',
       this.height,
       this.width,
       this.content,
+      this.color,
+      this.radius,
       super.key});
 
   @override
@@ -19,8 +24,12 @@ class BasicAppButton extends StatelessWidget {
     return ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
+          backgroundColor: color ?? AppColors.primary,
           minimumSize:
               Size(width ?? MediaQuery.of(context).size.width, height ?? 50),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(radius ?? 10),
+          ),
         ),
         child: content ??
             Text(

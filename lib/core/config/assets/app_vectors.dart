@@ -13,4 +13,5 @@ class AppVectors {
   static const home = '${basePath}home.svg';
   static const cart = '${basePath}cart.svg';
   static const notification = '${basePath}notification.svg';
+  static const favorite = '${basePath}favorite.svg';
 }

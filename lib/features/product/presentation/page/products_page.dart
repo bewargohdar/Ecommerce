@@ -34,48 +34,11 @@ class ProductsPage extends StatelessWidget {
             Expanded(
               child: BlocBuilder<ProductBloc, ProductState>(
                 builder: (context, state) {
-                  if (state is ProductLoading) {
+                  if (state.isLoading) {
                     return const Center(child: CircularProgressIndicator());
-                  } else if (state is ProductLoaded) {
-                    if (state.products.isEmpty) {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.shopping_bag_outlined,
-                              size: 64,
-                              color: Colors.grey[400],
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'No products found in $categoryName',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey[600],
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      );
-                    }
+                  }
 
-                    return GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        childAspectRatio: 0.8,
-                      ),
-                      itemCount: state.products.length,
-                      itemBuilder: (context, index) {
-                        final product = state.products[index];
-                        return ProductCard(product: product);
-                      },
-                    );
-                  } else if (state is ProductError) {
+                  if (state.error != null) {
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -87,7 +50,7 @@ class ProductsPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            'Error: ${state.message}',
+                            'Error: ${state.error}',
                             style: TextStyle(color: Colors.grey[600]),
                             textAlign: TextAlign.center,
                           ),
@@ -103,7 +66,45 @@ class ProductsPage extends StatelessWidget {
                       ),
                     );
                   }
-                  return const SizedBox();
+
+                  if (state.products.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.shopping_bag_outlined,
+                            size: 64,
+                            color: Colors.grey[400],
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'No products found in $categoryName',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey[600],
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 0.8,
+                    ),
+                    itemCount: state.products.length,
+                    itemBuilder: (context, index) {
+                      final product = state.products[index];
+                      return ProductCard(product: product);
+                    },
+                  );
                 },
               ),
             ),

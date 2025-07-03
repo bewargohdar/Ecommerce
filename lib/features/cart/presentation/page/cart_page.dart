@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ecomerce/common/widget/button/basic_app_button.dart';
 import 'package:ecomerce/core/config/theme/app_color.dart';
+import 'package:ecomerce/features/cart/domain/entity/cart_entity.dart';
 import 'package:ecomerce/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:ecomerce/features/cart/presentation/bloc/cart_event.dart';
 import 'package:ecomerce/features/cart/presentation/bloc/cart_state.dart';
@@ -53,13 +54,15 @@ class _CartPageState extends State<CartPage> {
           )
         ],
       ),
-      body: BlocBuilder<CartBloc, CartState>(
+      body: BlocSelector<CartBloc, CartState, CartState>(
+        selector: (state) => state,
         builder: (context, state) {
           if (state is CartLoading) {
             return const Center(child: CircularProgressIndicator());
           }
           if (state is CartError) {
-            return Center(child: Text(state.error ?? 'Something went wrong'));
+            return Center(
+                child: Text(state.error ?? 'An unknown error occurred'));
           }
           if (state is CartLoaded) {
             if (state.cart!.products.isEmpty) {
@@ -101,12 +104,17 @@ class _CartPageState extends State<CartPage> {
               separatorBuilder: (context, index) => const SizedBox(height: 16),
             );
           }
+
           return const SizedBox.shrink();
         },
       ),
-      bottomNavigationBar: BlocBuilder<CartBloc, CartState>(
-        builder: (context, state) {
-          if (state is CartLoaded && state.cart!.products.isNotEmpty) {
+      bottomNavigationBar: BlocSelector<CartBloc, CartState, CartEntity?>(
+        selector: (state) =>
+            (state is CartLoaded && state.cart!.products.isNotEmpty)
+                ? state.cart
+                : null,
+        builder: (context, cart) {
+          if (cart != null) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
               decoration: const BoxDecoration(color: AppColors.background),
@@ -119,7 +127,7 @@ class _CartPageState extends State<CartPage> {
                       Text('Subtotal',
                           style:
                               TextStyle(fontSize: 16, color: Colors.grey[400])),
-                      Text('\$${state.cart!.total.toStringAsFixed(2)}',
+                      Text('\$${cart.total.toStringAsFixed(2)}',
                           style: const TextStyle(
                               fontSize: 16, color: AppColors.white)),
                     ],
@@ -157,8 +165,7 @@ class _CartPageState extends State<CartPage> {
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.grey[400])),
-                      Text(
-                          '\$${state.cart!.discountedTotal.toStringAsFixed(2)}',
+                      Text('\$${cart.discountedTotal.toStringAsFixed(2)}',
                           style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,

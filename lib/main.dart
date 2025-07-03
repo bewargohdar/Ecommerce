@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:ecomerce/features/cart/presentation/bloc/cart_bloc.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -47,6 +49,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => sl<CategoryBloc>()),
           BlocProvider(create: (context) => sl<ProductBloc>()),
           BlocProvider(create: (context) => sl<SearchBloc>()),
+          BlocProvider(create: (context) => sl<CartBloc>()),
         ],
         child: MaterialApp(
             debugShowCheckedModeBanner: false,

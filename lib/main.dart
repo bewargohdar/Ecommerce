@@ -15,21 +15,12 @@ import 'package:ecomerce/firebase_options.dart';
 import 'package:ecomerce/service_locator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:ecomerce/features/cart/presentation/bloc/cart_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Optimize for faster startup
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-    DeviceOrientation.landscapeLeft,
-    DeviceOrientation.landscapeRight,
-  ]);
 
   // Initialize Firebase and dependencies in parallel for faster startup
   await Future.wait([

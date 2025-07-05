@@ -6,6 +6,7 @@ import 'package:ecomerce/features/auth/presentation/page/signin_page.dart';
 import 'package:ecomerce/features/category/presentation/bloc/category_bloc.dart';
 import 'package:ecomerce/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ecomerce/features/product/presentation/bloc/product_bloc.dart';
+import 'package:ecomerce/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:ecomerce/features/search/presentation/bloc/search_bloc.dart';
 import 'package:ecomerce/features/splash/bloc/splash_bloc.dart';
 import 'package:ecomerce/features/splash/bloc/splash_event.dart';
@@ -45,6 +46,9 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => sl<ProductBloc>()),
           BlocProvider(create: (context) => sl<SearchBloc>()),
           BlocProvider(create: (context) => sl<CartBloc>()),
+          BlocProvider(
+              create: (context) =>
+                  sl<ProfileBloc>()..add(const LoadUserProfileEvent(userId: 1)))
         ],
         child: MaterialApp(
             debugShowCheckedModeBanner: false,

@@ -1,3 +1,4 @@
+import 'package:ecomerce/features/profile/profile_injection.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 import 'package:ecomerce/features/auth/auth_injection.dart';
@@ -23,4 +24,5 @@ Future<void> initializeDependencies() async {
   setUpSplashDependencies();
   setUpHomeDependencies();
   setUpCartDependencies();
+  setUpProfileDependencies();
 }

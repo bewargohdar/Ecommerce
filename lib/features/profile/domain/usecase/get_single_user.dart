@@ -1,15 +1,15 @@
 import 'package:ecomerce/core/resource/data_state.dart';
 import 'package:ecomerce/core/usecase/usecase.dart';
-import 'package:ecomerce/features/auth/domain/entity/user_entity.dart';
-import 'package:ecomerce/features/profile/domain/repository/user_repo.dart';
+import 'package:ecomerce/features/profile/domain/entity/user.dart';
+import 'package:ecomerce/features/profile/domain/repository/profile_repo.dart';
 
-class GetSingleUser extends Usecase<DataState<UserEntity>, NoParams> {
-  final UserRepo _userRepo;
+class GetSingleUser extends Usecase<DataState<UserEntity>, int> {
+  final ProfileRepo _profileRepo;
 
-  GetSingleUser(this._userRepo);
+  GetSingleUser(this._profileRepo);
 
   @override
-  Future<DataState<UserEntity>> call(NoParams params) async {
-    return await _userRepo.getSingleUser();
+  Future<DataState<UserEntity>> call(int params) async {
+    return await _profileRepo.getSingleUser(params);
   }
 }

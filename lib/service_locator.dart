@@ -7,6 +7,7 @@ import 'package:ecomerce/features/product/product_injection.dart';
 import 'package:ecomerce/features/search/search_injection.dart';
 import 'package:ecomerce/features/splash/splash_injection.dart';
 import 'package:ecomerce/features/cart/cart_injection.dart';
+import 'package:ecomerce/core/service/notification_injection.dart';
 
 import '../../features/home/home_injection.dart';
 
@@ -25,4 +26,5 @@ Future<void> initializeDependencies() async {
   setUpHomeDependencies();
   setUpCartDependencies();
   setUpProfileDependencies();
+  setUpNotificationDependencies();
 }

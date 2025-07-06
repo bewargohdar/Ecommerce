@@ -1,4 +1,5 @@
 import 'package:ecomerce/core/config/theme/app_theme.dart';
+import 'package:ecomerce/core/service/notification_service.dart';
 import 'package:ecomerce/core/usecase/usecase.dart';
 import 'package:ecomerce/features/auth/domain/usecase/is_logged_in.dart';
 import 'package:ecomerce/features/auth/presentation/bloc/auth_bloc.dart';
@@ -28,6 +29,10 @@ Future<void> main() async {
     Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
     initializeDependencies(),
   ]);
+
+  // Initialize notification service
+  final notificationService = sl<NotificationService>();
+  await notificationService.initNotification();
 
   runApp(const MyApp());
 }

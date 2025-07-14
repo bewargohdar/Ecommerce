@@ -39,17 +39,19 @@ class EnterPasswordPage extends StatelessWidget {
               AppNavigator.pushAndRemove(context, const Scaffold());
             }
           },
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _enterPassword(context),
-              const SizedBox(height: 20),
-              _passwordFiled(context),
-              const SizedBox(height: 20),
-              _continueButton(context),
-              const SizedBox(height: 20),
-              _forgetPassword(context),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _enterPassword(context),
+                const SizedBox(height: 20),
+                _passwordFiled(context),
+                const SizedBox(height: 20),
+                _continueButton(context),
+                const SizedBox(height: 20),
+                _forgetPassword(context),
+              ],
+            ),
           ),
         ),
       ),

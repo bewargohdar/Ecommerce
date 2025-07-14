@@ -1,9 +1,6 @@
 import 'package:ecomerce/core/config/theme/app_theme.dart';
 import 'package:ecomerce/core/service/notification_service.dart';
-import 'package:ecomerce/core/usecase/usecase.dart';
-import 'package:ecomerce/features/auth/domain/usecase/is_logged_in.dart';
 import 'package:ecomerce/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:ecomerce/features/auth/presentation/page/signin_page.dart';
 import 'package:ecomerce/features/category/presentation/bloc/category_bloc.dart';
 import 'package:ecomerce/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ecomerce/features/product/presentation/bloc/product_bloc.dart';
@@ -12,27 +9,28 @@ import 'package:ecomerce/features/search/presentation/bloc/search_bloc.dart';
 import 'package:ecomerce/features/splash/bloc/splash_bloc.dart';
 import 'package:ecomerce/features/splash/bloc/splash_event.dart';
 import 'package:ecomerce/features/splash/page/splash.dart';
-import 'package:ecomerce/features/tabs/presentation/page/tabs_page.dart';
 import 'package:ecomerce/firebase_options.dart';
 import 'package:ecomerce/service_locator.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:ecomerce/features/cart/presentation/bloc/cart_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase and dependencies in parallel for faster startup
-  await Future.wait([
-    Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
-    initializeDependencies(),
-  ]);
+  // Initialize Firebase
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Initialize dependencies (GetIt)
+  await initializeDependencies();
 
   // Initialize notification service
-  final notificationService = sl<NotificationService>();
-  await notificationService.initNotification();
+  await NotificationService().initNotification();
+
+  // Set up background message handler
+  FirebaseMessaging.onBackgroundMessage(handleBackgroundMessaging);
 
   runApp(const MyApp());
 }
@@ -59,50 +57,19 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Ecomerce',
             theme: AppTheme.appTheme,
-            home: const AppRouter()),
+            home: const Splash()),
       );
 }
 
-class AppRouter extends StatefulWidget {
-  const AppRouter({super.key});
-
-  @override
-  State<AppRouter> createState() => _AppRouterState();
-}
-
-class _AppRouterState extends State<AppRouter> {
-  bool _isInitialized = false;
-  Widget? _homeWidget;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeApp();
-  }
-
-  Future<void> _initializeApp() async {
-    try {
-      final isLoggedInUseCase = sl<IsLoggedInUseCase>();
-      final isLoggedIn = await isLoggedInUseCase.call(NoParams());
-
-      setState(() {
-        _homeWidget = isLoggedIn ? const TabsPage() : SigninPage();
-        _isInitialized = true;
-      });
-    } catch (e) {
-      setState(() {
-        _homeWidget = SigninPage();
-        _isInitialized = true;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (!_isInitialized) {
-      return const Splash();
-    }
-
-    return _homeWidget!;
+Future<void> handleBackgroundMessaging(RemoteMessage message) async {
+  debugPrint('Background message received: ${message.notification?.title}');
+  debugPrint('Message data: ${message.data}');
+  
+  // Handle the background message data here
+  // You can store it locally, update app badge, etc.
+  if (message.data.isNotEmpty) {
+    String type = message.data['type'] ?? 'general';
+    String id = message.data['id'] ?? '';
+    debugPrint('Background message type: $type, id: $id');
   }
 }

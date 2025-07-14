@@ -2,6 +2,7 @@ import 'package:ecomerce/common/helper/navigator/app_navigator.dart';
 import 'package:ecomerce/common/widget/product/product_carousel.dart';
 import 'package:ecomerce/common/widget/search.dart';
 import 'package:ecomerce/core/config/theme/app_color.dart';
+import 'package:ecomerce/core/service/notification_service.dart';
 import 'package:ecomerce/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ecomerce/features/home/presentation/widget/categories.dart';
 import 'package:ecomerce/features/home/presentation/widget/categories_header.dart';
@@ -30,68 +31,84 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          NotificationService().showNotification(
+            id: 1,
+            title: 'Test Notification',
+            body: 'This is a test push notification!',
+            payload: 'test:notification',
+          );
+        },
+        child: const Icon(Icons.notifications),
+      ),
       body: SingleChildScrollView(
-        child: Column(
+        child: Stack(
           children: [
-            const SizedBox(
-              height: 50,
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 24, horizontal: 24),
-              child: Header(),
-            ),
-            SearchField(
-              readOnly: true,
-              onTap: () {
-                AppNavigator.push(context, const SearchPage());
-              },
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            BlocBuilder<HomeBloc, HomeState>(
-              builder: (context, state) {
-                if (state.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (state.error != null) {
-                  return Center(child: Text(state.error!));
-                }
+            Column(
+              children: [
+                const SizedBox(
+                  height: 50,
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 24, horizontal: 24),
+                  child: Header(),
+                ),
+                SearchField(
+                  readOnly: true,
+                  onTap: () {
+                    AppNavigator.push(context, const SearchPage());
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                BlocBuilder<HomeBloc, HomeState>(
+                  builder: (context, state) {
+                    if (state.isLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (state.error != null) {
+                      return Center(child: Text(state.error!));
+                    }
 
-                return Column(
-                  children: [
-                    if (state.categories != null) ...[
-                      const CategoriesHeader(
-                        text: "Categories",
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Categories(
-                        categories: state.categories!,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                    ],
-                    if (state.homeEntity != null) ...[
-                      const CategoriesHeader(
-                        text: "Top Selling",
-                      ),
-                      ProductCarousel(
-                          products: state.homeEntity!.topSellingProducts),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const CategoriesHeader(
-                        text: 'New In',
-                        color: AppColors.primary,
-                      ),
-                      ProductCarousel(products: state.homeEntity!.newArrivals),
-                    ]
-                  ],
-                );
-              },
+                    return Column(
+                      children: [
+                        if (state.categories != null) ...[
+                          const CategoriesHeader(
+                            text: "Categories",
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Categories(
+                            categories: state.categories!,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                        if (state.homeEntity != null) ...[
+                          const CategoriesHeader(
+                            text: "Top Selling",
+                          ),
+                          ProductCarousel(
+                              products: state.homeEntity!.topSellingProducts),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const CategoriesHeader(
+                            text: 'New In',
+                            color: AppColors.primary,
+                          ),
+                          ProductCarousel(
+                              products: state.homeEntity!.newArrivals),
+                        ]
+                      ],
+                    );
+                  },
+                ),
+              ],
             ),
           ],
         ),

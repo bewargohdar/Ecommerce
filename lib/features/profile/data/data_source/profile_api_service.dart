@@ -16,11 +16,11 @@ class ProfileApiService {
         final userModel = UserModel.fromJson(response.data);
         return DataSuccess(userModel);
       } else {
-        return DataFailed(
+        return DataError(
             Exception('Failed to fetch user: ${response.statusCode}'));
       }
     } catch (e) {
-      return DataFailed(Exception('Network error: ${e.toString()}'));
+      return DataError(Exception('Network error: ${e.toString()}'));
     }
   }
 }

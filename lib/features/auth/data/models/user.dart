@@ -7,15 +7,10 @@ part 'user.g.dart';
 
 @JsonSerializable()
 class UserModel {
-  @JsonKey(defaultValue: '')
   final String userId;
-  @JsonKey(defaultValue: '')
   final String firstName;
-  @JsonKey(defaultValue: '')
   final String lastName;
-  @JsonKey(defaultValue: '')
   final String email;
-  @JsonKey(defaultValue: '')
   final String image;
   @JsonKey(fromJson: _parseGender, defaultValue: 0)
   final int gender;

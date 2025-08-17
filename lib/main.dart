@@ -1,4 +1,4 @@
-import 'package:ecomerce/core/config/theme/app_theme.dart';
+import 'package:ecomerce/config/theme/app_theme.dart';
 import 'package:ecomerce/core/service/notification_service.dart';
 import 'package:ecomerce/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ecomerce/features/category/presentation/bloc/category_bloc.dart';

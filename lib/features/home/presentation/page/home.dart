@@ -1,7 +1,7 @@
 import 'package:ecomerce/common/helper/navigator/app_navigator.dart';
 import 'package:ecomerce/common/widget/product/product_carousel.dart';
 import 'package:ecomerce/common/widget/search.dart';
-import 'package:ecomerce/core/config/theme/app_color.dart';
+import 'package:ecomerce/config/theme/app_color.dart';
 import 'package:ecomerce/core/service/notification_service.dart';
 import 'package:ecomerce/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ecomerce/features/home/presentation/widget/categories.dart';

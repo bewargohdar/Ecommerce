@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecomerce/common/widget/appbar/app_bar.dart';
-import 'package:ecomerce/core/config/assets/app_vectors.dart';
-import 'package:ecomerce/core/config/theme/app_color.dart';
+import 'package:ecomerce/config/assets/app_vectors.dart';
+import 'package:ecomerce/config/theme/app_color.dart';
 import 'package:ecomerce/features/product/domain/entity/product.dart';
 import 'package:ecomerce/features/product/presentation/bloc/product_bloc.dart';
 import 'package:ecomerce/features/product/presentation/widget/info_block.dart';

@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ecomerce/core/config/theme/app_color.dart';
+import 'package:ecomerce/config/theme/app_color.dart';
 import 'package:flutter/material.dart';
 
 import '../../../features/product/domain/entity/product.dart';

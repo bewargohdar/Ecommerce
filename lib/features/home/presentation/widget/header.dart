@@ -1,12 +1,12 @@
 import 'package:ecomerce/common/helper/navigator/app_navigator.dart';
-import 'package:ecomerce/core/config/assets/app_images.dart';
-import 'package:ecomerce/core/config/theme/app_color.dart';
+import 'package:ecomerce/config/assets/app_images.dart';
+import 'package:ecomerce/config/theme/app_color.dart';
 import 'package:ecomerce/features/home/presentation/bloc/home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../../core/config/assets/app_vectors.dart';
+import '../../../../config/assets/app_vectors.dart';
 
 class Header extends StatelessWidget {
   const Header({super.key});

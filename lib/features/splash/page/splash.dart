@@ -1,6 +1,6 @@
 import 'package:ecomerce/common/helper/navigator/app_navigator.dart';
-import 'package:ecomerce/core/config/assets/app_vectors.dart';
-import 'package:ecomerce/core/config/theme/app_color.dart';
+import 'package:ecomerce/config/assets/app_vectors.dart';
+import 'package:ecomerce/config/theme/app_color.dart';
 import 'package:ecomerce/features/auth/presentation/page/signin_page.dart';
 import 'package:ecomerce/features/splash/bloc/splash_bloc.dart';
 import 'package:ecomerce/features/splash/bloc/splash_state.dart';

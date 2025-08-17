@@ -1,4 +1,4 @@
-import 'package:ecomerce/core/config/theme/app_color.dart';
+import 'package:ecomerce/config/theme/app_color.dart';
 import 'package:ecomerce/features/product/domain/entity/product.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;

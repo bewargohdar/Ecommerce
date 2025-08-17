@@ -1,4 +1,4 @@
-import 'package:ecomerce/core/config/theme/app_color.dart';
+import 'package:ecomerce/config/theme/app_color.dart';
 import 'package:ecomerce/features/profile/domain/entity/user.dart';
 import 'package:ecomerce/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:ecomerce/features/profile/presentation/widgets/profile_menu_tile.dart';

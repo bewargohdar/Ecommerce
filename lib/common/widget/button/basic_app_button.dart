@@ -1,4 +1,4 @@
-import 'package:ecomerce/core/config/theme/app_color.dart';
+import 'package:ecomerce/config/theme/app_color.dart';
 import 'package:flutter/material.dart';
 
 class BasicAppButton extends StatelessWidget {

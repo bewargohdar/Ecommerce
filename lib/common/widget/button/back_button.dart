@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ecomerce/core/config/theme/app_color.dart';
+import 'package:ecomerce/config/theme/app_color.dart';
 
 class CustomBackButton extends StatelessWidget {
   final VoidCallback? onPressed;

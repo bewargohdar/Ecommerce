@@ -1,5 +1,5 @@
 import 'package:ecomerce/common/helper/appbottomsheet/app_bottom_sheet.dart';
-import 'package:ecomerce/core/config/theme/app_color.dart';
+import 'package:ecomerce/config/theme/app_color.dart';
 import 'package:ecomerce/features/product/domain/entity/product.dart';
 import 'package:flutter/material.dart';
 

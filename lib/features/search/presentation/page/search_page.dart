@@ -1,6 +1,6 @@
 import 'package:ecomerce/common/widget/appbar/search_app_bar.dart';
-import 'package:ecomerce/core/config/assets/app_vectors.dart';
-import 'package:ecomerce/core/config/theme/app_color.dart';
+import 'package:ecomerce/config/assets/app_vectors.dart';
+import 'package:ecomerce/config/theme/app_color.dart';
 import 'package:ecomerce/features/category/presentation/widget/category_list_card.dart';
 import 'package:ecomerce/features/product/presentation/widget/product_card.dart';
 import 'package:ecomerce/features/search/presentation/bloc/search_bloc.dart';

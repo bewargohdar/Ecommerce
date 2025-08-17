@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ecomerce/common/widget/button/basic_app_button.dart';
-import 'package:ecomerce/core/config/theme/app_color.dart';
+import 'package:ecomerce/config/theme/app_color.dart';
 import 'package:ecomerce/features/cart/domain/entity/cart_entity.dart';
 import 'package:ecomerce/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:ecomerce/features/cart/presentation/bloc/cart_event.dart';

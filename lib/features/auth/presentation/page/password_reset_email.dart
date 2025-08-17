@@ -1,6 +1,6 @@
 import 'package:ecomerce/common/helper/navigator/app_navigator.dart';
 import 'package:ecomerce/common/widget/button/basic_app_button.dart';
-import 'package:ecomerce/core/config/assets/app_vectors.dart';
+import 'package:ecomerce/config/assets/app_vectors.dart';
 import 'package:ecomerce/features/auth/presentation/page/signin_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';

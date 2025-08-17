@@ -1,5 +1,5 @@
-import 'package:ecomerce/core/config/assets/app_vectors.dart';
-import 'package:ecomerce/core/config/theme/app_color.dart';
+import 'package:ecomerce/config/assets/app_vectors.dart';
+import 'package:ecomerce/config/theme/app_color.dart';
 import 'package:ecomerce/features/cart/presentation/page/cart_page.dart';
 import 'package:ecomerce/features/home/presentation/page/home.dart';
 import 'package:ecomerce/features/notification/notification_page.dart';

@@ -1,8 +1,8 @@
 import 'package:ecomerce/core/config/assets/app_vectors.dart';
 import 'package:ecomerce/core/config/theme/app_color.dart';
 import 'package:ecomerce/features/cart/presentation/page/cart_page.dart';
-import 'package:ecomerce/features/category/presentation/screen/category.dart';
 import 'package:ecomerce/features/home/presentation/page/home.dart';
+import 'package:ecomerce/features/notification/notification_page.dart';
 import 'package:ecomerce/features/profile/presentation/page/profile_page.dart';
 
 import 'package:flutter/material.dart';
@@ -42,7 +42,7 @@ class _TabsPageState extends State<TabsPage> {
 
   List<Widget> get pages => <Widget>[
         const HomePage(),
-        const CategoryPage(),
+        const NotificationPage(),
         const CartPage(),
         const ProfilePage(),
       ];

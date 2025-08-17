@@ -16,6 +16,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ecomerce/features/cart/presentation/bloc/cart_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,8 +27,11 @@ Future<void> main() async {
   // Initialize dependencies (GetIt)
   await initializeDependencies();
 
+  final notificationService = NotificationService();
   // Initialize notification service
-  await NotificationService().initNotification();
+  await notificationService.init();
+
+  await dotenv.load(fileName: ".env");
 
   // Set up background message handler
   FirebaseMessaging.onBackgroundMessage(handleBackgroundMessaging);
@@ -64,7 +68,7 @@ class MyApp extends StatelessWidget {
 Future<void> handleBackgroundMessaging(RemoteMessage message) async {
   debugPrint('Background message received: ${message.notification?.title}');
   debugPrint('Message data: ${message.data}');
-  
+
   // Handle the background message data here
   // You can store it locally, update app badge, etc.
   if (message.data.isNotEmpty) {

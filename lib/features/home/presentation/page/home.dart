@@ -33,12 +33,12 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          NotificationService().showNotification(
-            id: 1,
-            title: 'Test Notification',
-            body: 'This is a test push notification!',
-            payload: 'test:notification',
-          );
+          // NotificationService().showNotification(
+          //   id: 1,
+          //   title: 'Test Notification',
+          //   body: 'This is a test push notification!',
+          //   payload: 'test:notification',
+          // );
         },
         child: const Icon(Icons.notifications),
       ),

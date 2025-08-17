@@ -1,146 +1,184 @@
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter/material.dart';
-import 'package:timezone/timezone.dart' as tz;
-import 'package:timezone/data/latest_all.dart' as tz;
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:googleapis_auth/auth_io.dart';
+import 'package:googleapis_auth/googleapis_auth.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+// It is recommended to declare this handler as a top-level function outside of any class.
+// This is CRITICAL for handling messages when the app is in the background or terminated.
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, like Firestore,
+  // make sure you call `initializeApp` before using them.
+  await Firebase.initializeApp();
+  // Handle background message: ${message.messageId}
+  // Message data: ${message.data}
+  // Message notification: ${message.notification?.title}
+}
 
 class NotificationService {
+  // Singleton pattern
   static final NotificationService _instance = NotificationService._internal();
   factory NotificationService() => _instance;
   NotificationService._internal();
 
-  final FlutterLocalNotificationsPlugin _notificationPlugin =
-      FlutterLocalNotificationsPlugin();
+  // Dependencies
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  final FlutterLocalNotificationsPlugin _localNotifications =
+      FlutterLocalNotificationsPlugin();
 
+  // State
   bool _isInitialized = false;
   String? _fcmToken;
 
-  // Notification channel constants
-  static const String _channelId = 'ecommerce_channel';
-  static const String _channelName = 'E-commerce Notifications';
-  static const String _channelDescription = 'Notifications for E-commerce app';
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
 
-  bool get isInitialized => _isInitialized;
-  String? get fcmToken => _fcmToken;
-
-  // Initialize notification service
-  Future<void> initNotification() async {
+  Future<void> init() async {
     if (_isInitialized) return;
 
-    // Initialize timezone
-    tz.initializeTimeZones();
+    await _requestPermissions();
 
-    // Android initialization settings
-    const initSettingAndroid =
+    _fcmToken = await _firebaseMessaging.getToken();
+    _firebaseMessaging.onTokenRefresh.listen((token) {
+      _fcmToken = token;
+      // FCM Token refreshed: $token
+      // Here you would send the new token to your server
+    });
+
+    // 3. Set up Handlers
+    _setupMessageHandlers();
+
+    // --- Local Notifications Setup ---
+    await _initializeLocalNotifications();
+
+    _isInitialized = true;
+    // NotificationService initialized.
+  }
+
+  /// Requests notification permissions.
+  Future<void> _requestPermissions() async {
+    await _firebaseMessaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+  }
+
+  /// Sets up handlers for incoming FCM messages in different app states.
+  void _setupMessageHandlers() {
+    // 1. Foreground messages
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message.notification != null) {
+        showLocalNotification(
+          id: message.hashCode,
+          title: message.notification!.title ?? 'New Message',
+          body: message.notification!.body ?? '',
+          payload: message.data['route'], // Example: pass a route
+        );
+      }
+    });
+
+    // 2. Background/Terminated messages (when user taps the notification)
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      // Notification TAPPED (from background/terminated)
+      _handleNotificationTap(message.data);
+    });
+
+    // 3. Handle initial message if app was opened from a terminated state
+    _firebaseMessaging.getInitialMessage().then((RemoteMessage? message) {
+      if (message != null) {
+        // App opened from TERMINATED state via notification
+        _handleNotificationTap(message.data);
+      }
+    });
+
+    // 4. Set the background handler
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
+
+  /// Initializes the flutter_local_notifications plugin.
+  Future<void> _initializeLocalNotifications() async {
+    // Android Initialization
+    const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    // iOS initialization settings
-    const initSettingIos = DarwinInitializationSettings(
+    // iOS Initialization
+    const DarwinInitializationSettings iosSettings =
+        DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
     );
 
-    // Combined initialization settings
-    const initSetting = InitializationSettings(
-      android: initSettingAndroid,
-      iOS: initSettingIos,
+    const InitializationSettings initSettings = InitializationSettings(
+      android: androidSettings,
+      iOS: iosSettings,
     );
 
-    // Initialize the plugin
-    await _notificationPlugin.initialize(
-      initSetting,
-      onDidReceiveNotificationResponse: _onNotificationResponse,
+    await _localNotifications.initialize(
+      initSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        // Local notification TAPPED
+        if (response.payload != null && response.payload!.isNotEmpty) {
+          _handleNotificationTap({'route': response.payload});
+        }
+      },
     );
 
-    // Initialize Firebase messaging
-    await _initializeFirebaseMessaging();
+    // Create a channel for Android (required for Android 8.0+)
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'high_importance_channel', // id
+      'High Importance Notifications', // title
+      description:
+          'This channel is used for important notifications.', // description
+      importance: Importance.max,
+      playSound: true,
+    );
 
-    _isInitialized = true;
+    await _localNotifications
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
   }
 
-  // Initialize Firebase messaging
-  Future<void> _initializeFirebaseMessaging() async {
-    // Request permission for iOS
-    NotificationSettings settings = await _firebaseMessaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-    );
-
-    debugPrint('User granted permission: ${settings.authorizationStatus}');
-
-    // Get FCM token
-    _fcmToken = await _firebaseMessaging.getToken();
-    debugPrint('FCM Token: $_fcmToken');
-
-    // Listen for token refresh
-    _firebaseMessaging.onTokenRefresh.listen((newToken) {
-      _fcmToken = newToken;
-      debugPrint('FCM Token refreshed: $newToken');
-      // Send new token to your server here
-    });
-
-    // Handle foreground messages
-    FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
-
-    // Handle notification tap when app is in background or terminated
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessageOpenedApp);
-
-    // Handle initial message if app was terminated
-    RemoteMessage? initialMessage = await _firebaseMessaging.getInitialMessage();
-    if (initialMessage != null) {
-      _handleMessageOpenedApp(initialMessage);
+  /// Centralized handler for notification taps.
+  void _handleNotificationTap(Map<String, dynamic> data) {
+    // Handling tap with data: $data
+    final String? route = data['route'];
+    if (route != null) {
+      // Navigating to route: $route
+      // Use the global navigator key to navigate without a build context.
+      navigatorKey.currentState?.pushNamed(route);
     }
   }
 
-  // Handle foreground messages
-  Future<void> _handleForegroundMessage(RemoteMessage message) async {
-    debugPrint('Received foreground message: ${message.messageId}');
-    
-    // Show local notification when app is in foreground
-    RemoteNotification? notification = message.notification;
-    AndroidNotification? android = message.notification?.android;
-
-    if (notification != null && android != null) {
-      await showNotification(
-        id: notification.hashCode,
-        title: notification.title ?? 'New Notification',
-        body: notification.body ?? '',
-        payload: _createPayloadFromMessage(message),
-      );
-    }
-  }
-
-  // Handle message when app is opened from notification
-  void _handleMessageOpenedApp(RemoteMessage message) {
-    debugPrint('Message opened app: ${message.messageId}');
-    String payload = _createPayloadFromMessage(message);
-    _handleNotificationTap(payload);
-  }
-
-  // Create payload string from RemoteMessage
-  String _createPayloadFromMessage(RemoteMessage message) {
-    Map<String, dynamic> data = message.data;
-    String type = data['type'] ?? 'general';
-    String id = data['id'] ?? '';
-    return '$type:$id';
-  }
-
-  // Notification detail setup
-  NotificationDetails _notificationDetails() {
-    return const NotificationDetails(
+  /// Displays a local notification.
+  Future<void> showLocalNotification({
+    required int id,
+    required String title,
+    required String body,
+    String? payload,
+  }) async {
+    // Showing local notification: $id, Title: $title
+    const NotificationDetails details = NotificationDetails(
       android: AndroidNotificationDetails(
-        _channelId,
-        _channelName,
-        channelDescription: _channelDescription,
-        importance: Importance.high,
+        'high_importance_channel',
+        'High Importance Notifications',
+        channelDescription: 'This channel is used for important notifications.',
+        importance: Importance.max,
         priority: Priority.high,
-        showWhen: false,
+        icon: '@mipmap/ic_launcher',
       ),
       iOS: DarwinNotificationDetails(
         presentAlert: true,
@@ -148,388 +186,87 @@ class NotificationService {
         presentSound: true,
       ),
     );
+    await _localNotifications.show(id, title, body, details, payload: payload);
   }
 
-  // Handle notification response
-  void _onNotificationResponse(NotificationResponse notificationResponse) {
-    final String? payload = notificationResponse.payload;
-    if (notificationResponse.payload != null) {
-      debugPrint('Notification payload: $payload');
-      // Handle navigation based on payload
-      _handleNotificationTap(payload);
-    }
+  /// Returns the current FCM token.
+  String? getFCMToken() => _fcmToken;
+
+  /// Test method to verify local notifications work.
+  Future<void> showTestNotification() async {
+    // Showing test notification...
+    await showLocalNotification(
+      id: 999,
+      title: 'Test Notification',
+      body: 'This is a test notification to verify the system works.',
+      payload: '/test',
+    );
   }
 
-  // Handle notification tap
-  void _handleNotificationTap(String? payload) {
-    if (payload == null) return;
+  Future<AccessCredentials> _getAccessToken() async {
+    final serviceAccountPath = dotenv.env['PATH_TO_SECRET'];
 
-    debugPrint('Handling notification with payload: $payload');
-    
-    // Parse payload format: "type:id" or "type:parameter"
-    List<String> parts = payload.split(':');
-    if (parts.length < 2) return;
-    
-    String type = parts[0];
-    String parameter = parts[1];
-    
-    switch (type) {
-      case 'order':
-        _navigateToOrderDetails(parameter);
-        break;
-      case 'product':
-        _navigateToProductDetails(parameter);
-        break;
-      case 'cart':
-        _navigateToCart();
-        break;
-      case 'promo':
-        _navigateToPromotions(parameter);
-        break;
-      case 'shipping':
-        _navigateToOrderTracking(parameter);
-        break;
-      case 'delivered':
-        _navigateToOrderDetails(parameter);
-        break;
-      case 'wishlist':
-        _navigateToWishlist();
-        break;
-      case 'stock':
-        _navigateToProductDetails(parameter);
-        break;
-      default:
-        _navigateToHome();
-        break;
-    }
+    String serviceAccountJson =
+        await rootBundle.loadString(serviceAccountPath!);
+
+    final serviceAccount =
+        ServiceAccountCredentials.fromJson(serviceAccountJson);
+
+    final scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
+
+    final client = await clientViaServiceAccount(serviceAccount, scopes);
+    return client.credentials;
   }
 
-  // Navigation methods - implement based on your app's navigation structure
-  void _navigateToOrderDetails(String orderId) {
-    debugPrint('Navigate to order details: $orderId');
-    // TODO: Implement navigation to order details page
-    // Example: Get.toNamed('/order-details', arguments: orderId);
-  }
-
-  void _navigateToProductDetails(String productId) {
-    debugPrint('Navigate to product details: $productId');
-    // TODO: Implement navigation to product details page
-    // Example: Get.toNamed('/product-details', arguments: productId);
-  }
-
-  void _navigateToCart() {
-    debugPrint('Navigate to cart');
-    // TODO: Implement navigation to cart page
-    // Example: Get.toNamed('/cart');
-  }
-
-  void _navigateToPromotions(String promoCode) {
-    debugPrint('Navigate to promotions: $promoCode');
-    // TODO: Implement navigation to promotions page
-    // Example: Get.toNamed('/promotions', arguments: promoCode);
-  }
-
-  void _navigateToOrderTracking(String orderId) {
-    debugPrint('Navigate to order tracking: $orderId');
-    // TODO: Implement navigation to order tracking page
-    // Example: Get.toNamed('/order-tracking', arguments: orderId);
-  }
-
-  void _navigateToWishlist() {
-    debugPrint('Navigate to wishlist');
-    // TODO: Implement navigation to wishlist page
-    // Example: Get.toNamed('/wishlist');
-  }
-
-  void _navigateToHome() {
-    debugPrint('Navigate to home');
-    // TODO: Implement navigation to home page
-    // Example: Get.toNamed('/home');
-  }
-
-  // Show a simple notification
-  Future<void> showNotification({
-    required int id,
+  Future<bool> sendPushNotification({
+    required String deviceToken,
     required String title,
     required String body,
-    String? payload,
+    Map<String, dynamic>? data,
   }) async {
-    if (!_isInitialized) {
-      debugPrint('NotificationService not initialized');
-      return;
-    }
+    if (deviceToken.isEmpty) return false;
 
-    await _notificationPlugin.show(
-      id,
-      title,
-      body,
-      _notificationDetails(),
-      payload: payload,
-    );
-  }
+    final credentials = await _getAccessToken();
+    final accessToken = credentials.accessToken.data;
+    final projectId = dotenv.env['PROJECT_ID'];
 
-  // Show notification with custom sound
-  Future<void> showNotificationWithSound({
-    required int id,
-    required String title,
-    required String body,
-    String? payload,
-    String? soundFileName,
-  }) async {
-    if (!_isInitialized) {
-      debugPrint('NotificationService not initialized');
-      return;
-    }
+    final url =
+        'https://fcm.googleapis.com/v1/projects/$projectId/messages:send';
 
-    final androidDetails = AndroidNotificationDetails(
-      _channelId,
-      _channelName,
-      channelDescription: _channelDescription,
-      importance: Importance.high,
-      priority: Priority.high,
-      sound: soundFileName != null
-          ? RawResourceAndroidNotificationSound(soundFileName)
-          : null,
-    );
+    final message = {
+      'message': {
+        'token': deviceToken,
+        'notification': {
+          'title': title,
+          'body': body,
+        },
+        'data': data ?? {},
+      },
+    };
 
-    final iosDetails = DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-      sound: soundFileName,
-    );
-
-    final details = NotificationDetails(
-      android: androidDetails,
-      iOS: iosDetails,
-    );
-
-    await _notificationPlugin.show(
-      id,
-      title,
-      body,
-      details,
-      payload: payload,
-    );
-  }
-
-  // Schedule a notification
-  Future<void> scheduleNotification({
-    required int id,
-    required String title,
-    required String body,
-    required DateTime scheduledDate,
-    String? payload,
-  }) async {
-    if (!_isInitialized) {
-      debugPrint('NotificationService not initialized');
-      return;
-    }
-
-    await _notificationPlugin.zonedSchedule(
-      id,
-      title,
-      body,
-      tz.TZDateTime.from(scheduledDate, tz.local),
-      _notificationDetails(),
-      payload: payload,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-    );
-  }
-
-  // Cancel a specific notification
-  Future<void> cancelNotification(int id) async {
-    await _notificationPlugin.cancel(id);
-  }
-
-  // Cancel all notifications
-  Future<void> cancelAllNotifications() async {
-    await _notificationPlugin.cancelAll();
-  }
-
-  // Check for pending notifications
-  Future<List<PendingNotificationRequest>> getPendingNotifications() async {
-    return await _notificationPlugin.pendingNotificationRequests();
-  }
-
-  // Request permissions (especially for iOS)
-  Future<bool?> requestPermissions() async {
-    if (_isInitialized) {
-      return await _notificationPlugin
-          .resolvePlatformSpecificImplementation<
-              IOSFlutterLocalNotificationsPlugin>()
-          ?.requestPermissions(
-            alert: true,
-            badge: true,
-            sound: true,
-          );
-    }
-    return false;
-  }
-
-  // E-commerce specific notification methods
-
-  // Show order confirmation notification
-  Future<void> showOrderConfirmation({
-    required String orderId,
-    required double amount,
-  }) async {
-    await showNotification(
-      id: orderId.hashCode,
-      title: '🎉 Order Confirmed!',
-      body:
-          'Your order #$orderId for \$${amount.toStringAsFixed(2)} has been confirmed.',
-      payload: 'order:$orderId',
-    );
-  }
-
-  // Show shipping notification
-  Future<void> showShippingUpdate({
-    required String orderId,
-    required String status,
-  }) async {
-    await showNotification(
-      id: orderId.hashCode + 1,
-      title: '📦 Shipping Update',
-      body: 'Your order #$orderId is $status.',
-      payload: 'shipping:$orderId',
-    );
-  }
-
-  // Show delivery notification
-  Future<void> showDeliveryNotification({
-    required String orderId,
-  }) async {
-    await showNotification(
-      id: orderId.hashCode + 2,
-      title: '🚚 Order Delivered!',
-      body: 'Your order #$orderId has been delivered successfully.',
-      payload: 'delivered:$orderId',
-    );
-  }
-
-  // Show promotional notification
-  Future<void> showPromotionalNotification({
-    required String title,
-    required String message,
-    String? promoCode,
-  }) async {
-    await showNotification(
-      id: DateTime.now().millisecondsSinceEpoch,
-      title: '🎁 $title',
-      body: message,
-      payload: promoCode != null ? 'promo:$promoCode' : 'promo:general',
-    );
-  }
-
-  // Show cart abandonment reminder
-  Future<void> showCartReminderNotification({
-    required int itemCount,
-  }) async {
-    await showNotification(
-      id: 999999, // Fixed ID for cart reminders
-      title: '🛒 Items waiting in your cart',
-      body:
-          'You have $itemCount item${itemCount > 1 ? 's' : ''} waiting. Complete your purchase now!',
-      payload: 'cart:reminder',
-    );
-  }
-
-  // Show wishlist item on sale notification
-  Future<void> showWishlistSaleNotification({
-    required String productName,
-    required double originalPrice,
-    required double salePrice,
-  }) async {
-    final discount =
-        ((originalPrice - salePrice) / originalPrice * 100).round();
-    await showNotification(
-      id: productName.hashCode,
-      title: '💝 Wishlist Item on Sale!',
-      body:
-          '$productName is now $discount% off! Was \$${originalPrice.toStringAsFixed(2)}, now \$${salePrice.toStringAsFixed(2)}',
-      payload: 'wishlist:sale:$productName',
-    );
-  }
-
-  // Show low stock notification
-  Future<void> showLowStockNotification({
-    required String productName,
-    required int remainingStock,
-  }) async {
-    await showNotification(
-      id: productName.hashCode + 100,
-      title: '⚠️ Low Stock Alert',
-      body: 'Only $remainingStock left of $productName. Order now!',
-      payload: 'stock:low:$productName',
-    );
-  }
-
-  // Firebase messaging topic subscription methods
-  
-  // Subscribe to notification topics
-  Future<void> subscribeToTopic(String topic) async {
     try {
-      await _firebaseMessaging.subscribeToTopic(topic);
-      debugPrint('Subscribed to topic: $topic');
+      final dio = Dio();
+      final response = await dio.post(
+        url,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $accessToken',
+          },
+        ),
+        data: jsonEncode(message),
+      );
+
+      if (response.statusCode == 200) {
+        print('Notification sent successfully.');
+        return true;
+      } else {
+        print('Failed to send notification: ${response.data}');
+        return false;
+      }
     } catch (e) {
-      debugPrint('Error subscribing to topic $topic: $e');
+      print('Error sending notification: $e');
+      return false;
     }
-  }
-
-  // Unsubscribe from notification topics
-  Future<void> unsubscribeFromTopic(String topic) async {
-    try {
-      await _firebaseMessaging.unsubscribeFromTopic(topic);
-      debugPrint('Unsubscribed from topic: $topic');
-    } catch (e) {
-      debugPrint('Error unsubscribing from topic $topic: $e');
-    }
-  }
-
-  // Subscribe to all e-commerce related topics
-  Future<void> subscribeToEcommerceTopics() async {
-    await subscribeToTopic('all_users');
-    await subscribeToTopic('promotions');
-    await subscribeToTopic('new_products');
-    await subscribeToTopic('price_alerts');
-  }
-
-  // Unsubscribe from all topics
-  Future<void> unsubscribeFromAllTopics() async {
-    await unsubscribeFromTopic('all_users');
-    await unsubscribeFromTopic('promotions');
-    await unsubscribeFromTopic('new_products');
-    await unsubscribeFromTopic('price_alerts');
-  }
-
-  // Subscribe to user-specific topics
-  Future<void> subscribeToUserTopics(String userId) async {
-    await subscribeToTopic('user_$userId');
-    await subscribeToTopic('orders_$userId');
-  }
-
-  // Unsubscribe from user-specific topics
-  Future<void> unsubscribeFromUserTopics(String userId) async {
-    await unsubscribeFromTopic('user_$userId');
-    await unsubscribeFromTopic('orders_$userId');
-  }
-
-  // Get current FCM token for sending to server
-  Future<String?> getCurrentToken() async {
-    try {
-      String? token = await _firebaseMessaging.getToken();
-      _fcmToken = token;
-      return token;
-    } catch (e) {
-      debugPrint('Error getting FCM token: $e');
-      return null;
-    }
-  }
-
-  // Check if notifications are enabled
-  Future<bool> areNotificationsEnabled() async {
-    NotificationSettings settings = await _firebaseMessaging.getNotificationSettings();
-    return settings.authorizationStatus == AuthorizationStatus.authorized;
   }
 }

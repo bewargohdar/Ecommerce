@@ -29,7 +29,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ) async {
     emit(
       state.copyWith(
-        getUserState: DataFetching(),
+        getUserState: DataLoading(),
         isLoading: true,
         errorMessage: null,
       ),
@@ -46,13 +46,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           successMessage: 'Profile loaded successfully',
         ),
       );
-    } else if (result is DataFailed) {
+    } else if (result is DataError) {
       emit(
         state.copyWith(
           getUserState: result,
           isLoading: false,
-          errorMessage:
-              'Failed to load profile: ${result.exception?.toString()}',
+          errorMessage: 'Failed to load profile: ${result.error?.toString()}',
         ),
       );
     }
@@ -66,7 +65,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     emit(
       state.copyWith(
-        updateUserState: DataFetching(),
+        updateUserState: DataLoading(),
         isLoading: true,
         errorMessage: null,
       ),

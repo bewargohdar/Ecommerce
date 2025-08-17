@@ -1,44 +1,22 @@
-import 'package:flutter/material.dart';
-
 abstract class DataState<T> {
-  T? data;
-  final Exception? exception;
+  final T? data;
+  final Exception? error;
 
-  DataState({this.data, this.exception});
-
-  List<Key>? get loadingKeys => null;
-  int? get identifier => null;
-}
-
-class DataSuccess<T> extends DataState<T> {
-  DataSuccess(T data) : super(data: data);
+  const DataState({this.data, this.error});
 }
 
 class DataInitial<T> extends DataState<T> {
-  T? initialData;
-
-  DataInitial({this.initialData}) : super(data: initialData);
+  const DataInitial({super.data});
 }
 
-class DataFetching<T> extends DataState<T> {
-  bool? isPaginate;
-
-  @override
-  List<Key>? loadingKeys;
-
-  @override
-  int? identifier;
-
-  DataFetching(
-      {this.isPaginate, this.loadingKeys, super.data, this.identifier}) {
-    loadingKeys ??= [];
-  }
+class DataLoading<T> extends DataState<T> {
+  const DataLoading({super.data});
 }
 
-class DataFailed<T> extends DataState<T> {
-  DataFailed(Exception exception) : super(exception: exception);
+class DataSuccess<T> extends DataState<T> {
+  const DataSuccess(T data) : super(data: data);
 }
 
-class DataNotSet<T> extends DataState<T> {
-  DataNotSet();
+class DataError<T> extends DataState<T> {
+  const DataError(Exception error) : super(error: error);
 }

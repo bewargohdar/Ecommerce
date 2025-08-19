@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart';
+import 'package:ecomerce/core/resource/data_state.dart';
 import 'package:ecomerce/features/auth/domain/usecase/get_ages.dart';
 import 'package:ecomerce/features/auth/domain/usecase/send_password_reset.dart';
 import 'package:ecomerce/features/auth/domain/usecase/signin.dart';
@@ -33,10 +33,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AgesLoading());
     var returnedData = await _getAgesUseCase.call(event);
 
-    returnedData.fold(
-      (message) => emit(AgesLoadFailure(message: message)),
-      (data) => emit(AgesLoaded(ages: data)),
-    );
+    if (returnedData is DataSuccess) {
+      emit(AgesLoaded(ages: returnedData.data));
+    } else if (returnedData is DataError) {
+      emit(AgesLoadFailure(
+          message: returnedData.error?.toString() ?? 'Failed to load ages'));
+    } else {
+      emit(AgesLoadFailure(message: 'Unknown error occurred'));
+    }
   }
 
   Future<void> _selectAge(SelectAge event, Emitter<AuthState> emit) async {
@@ -52,11 +56,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       ExecuteUseCase event, Emitter<AuthState> emit) async {
     emit(ButtonLoadingState());
     try {
-      Either returnedData = await event.usecase.call(event.params);
-      returnedData.fold(
-        (error) => emit(ButtonFailureState(errorMessage: error)),
-        (data) => emit(ButtonSuccessState()),
-      );
+      DataState returnedData = await event.usecase.call(event.params);
+      if (returnedData is DataSuccess) {
+        emit(ButtonSuccessState());
+      } else if (returnedData is DataError) {
+        emit(ButtonFailureState(
+            errorMessage: returnedData.error?.toString() ?? 'Unknown error'));
+      } else {
+        emit(ButtonFailureState(errorMessage: 'Unknown error occurred'));
+      }
     } catch (e) {
       emit(ButtonFailureState(errorMessage: e.toString()));
     }
@@ -65,11 +73,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _signIn(SignInEvent event, Emitter<AuthState> emit) async {
     emit(ButtonLoadingState());
     try {
-      Either returnedData = await _signinUsecase.call(event.signinUserReq);
-      returnedData.fold(
-        (error) => emit(ButtonFailureState(errorMessage: error)),
-        (data) => emit(ButtonSuccessState()),
-      );
+      DataState returnedData = await _signinUsecase.call(event.signinUserReq);
+      if (returnedData is DataSuccess) {
+        emit(ButtonSuccessState());
+      } else if (returnedData is DataError) {
+        emit(ButtonFailureState(
+            errorMessage: returnedData.error?.toString() ?? 'Unknown error'));
+      } else {
+        emit(ButtonFailureState(errorMessage: 'Unknown error occurred'));
+      }
     } catch (e) {
       emit(ButtonFailureState(errorMessage: e.toString()));
     }

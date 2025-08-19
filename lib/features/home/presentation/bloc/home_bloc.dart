@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:ecomerce/core/resource/data_state.dart';
 import 'package:ecomerce/core/usecase/usecase.dart';
 import 'package:ecomerce/features/auth/domain/entity/user_entity.dart';
 import 'package:ecomerce/features/auth/domain/usecase/get_users.dart';
@@ -30,11 +31,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       FetchUserInfo event, Emitter<HomeState> emit) async {
     emit(state.copyWith(isLoading: true));
     var returnedData = await getUsers.call(NoParams());
-    returnedData.fold(
-      (error) =>
-          emit(state.copyWith(isLoading: false, error: error.toString())),
-      (data) => emit(state.copyWith(isLoading: false, user: data)),
-    );
+    if (returnedData is DataSuccess) {
+      emit(state.copyWith(isLoading: false, user: returnedData.data));
+    } else if (returnedData is DataError) {
+      emit(state.copyWith(
+          isLoading: false, error: returnedData.error?.toString()));
+    }
   }
 
   Future<void> _fetchHomeData(

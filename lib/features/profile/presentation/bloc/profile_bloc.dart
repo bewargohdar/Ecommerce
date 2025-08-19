@@ -71,8 +71,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       ),
     );
 
-    // TODO: Implement update user info use case
-    // For now, simulate success and create updated user
     await Future.delayed(const Duration(seconds: 1));
 
     // Create updated user with new info

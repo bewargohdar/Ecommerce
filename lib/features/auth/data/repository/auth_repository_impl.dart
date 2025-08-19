@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart';
+import 'package:ecomerce/core/resource/data_state.dart';
 import 'package:ecomerce/features/auth/data/models/signin_user_req.dart';
 import 'package:ecomerce/features/auth/data/models/signup_model.dart';
 import 'package:ecomerce/features/auth/data/models/user.dart';
@@ -8,22 +8,22 @@ import 'package:ecomerce/service_locator.dart';
 
 class AuthRepositoryImpl extends AuthRepository {
   @override
-  Future<Either> signup(UserCredentialRequestModel userModel) async {
+  Future<DataState> signup(UserCredentialRequestModel userModel) async {
     return await sl<AuthFirebaseService>().signup(userModel);
   }
 
   @override
-  Future<Either> getAges() async {
+  Future<DataState> getAges() async {
     return await sl<AuthFirebaseService>().getAges();
   }
 
   @override
-  Future<Either> signin(SigninUserReq user) async {
+  Future<DataState> signin(SigninUserReq user) async {
     return await sl<AuthFirebaseService>().signin(user);
   }
 
   @override
-  Future<Either> sendPasswordResetEmail(String email) async {
+  Future<DataState> sendPasswordResetEmail(String email) async {
     return await sl<AuthFirebaseService>().sendPasswordResetEmail(email);
   }
 
@@ -33,12 +33,18 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
-  Future<Either> getUser() async {
+  Future<DataState> getUser() async {
     var user = await sl<AuthFirebaseService>().getUser();
-    return user.fold((error) {
-      return Left(error);
-    }, (data) {
-      return Right(UserModel.fromJson(data).toEntity());
-    });
+    if (user is DataSuccess) {
+      try {
+        return DataSuccess(UserModel.fromJson(user.data).toEntity());
+      } catch (e) {
+        return DataError(Exception('Failed to parse user data'));
+      }
+    } else if (user is DataError) {
+      return user;
+    } else {
+      return DataError(Exception('Unknown error occurred'));
+    }
   }
 }

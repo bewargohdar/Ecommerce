@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dartz/dartz.dart';
+import 'package:ecomerce/core/resource/data_state.dart';
 import 'package:ecomerce/features/auth/data/models/signin_user_req.dart';
 import 'package:ecomerce/features/auth/data/models/signup_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class AuthFirebaseService {
-  Future<Either> signup(UserCredentialRequestModel userModel);
-  Future<Either> signin(SigninUserReq userModel);
-  Future<Either> getAges();
-  Future<Either> sendPasswordResetEmail(String email);
+  Future<DataState> signup(UserCredentialRequestModel userModel);
+  Future<DataState> signin(SigninUserReq userModel);
+  Future<DataState> getAges();
+  Future<DataState> sendPasswordResetEmail(String email);
   Future<bool> isLoggedIn();
-  Future<Either> getUser();
+  Future<DataState> getUser();
 }
 
 class AuthFirebaseServiceImpl implements AuthFirebaseService {
@@ -18,7 +18,7 @@ class AuthFirebaseServiceImpl implements AuthFirebaseService {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
   @override
-  Future<Either> signup(UserCredentialRequestModel userModel) async {
+  Future<DataState> signup(UserCredentialRequestModel userModel) async {
     try {
       var data = await _firebaseAuth.createUserWithEmailAndPassword(
         email: userModel.email!,
@@ -37,7 +37,7 @@ class AuthFirebaseServiceImpl implements AuthFirebaseService {
         'gender': userModel.gender,
         'age': userModel.age,
       });
-      return const Right('Singup was successful');
+      return const DataSuccess('Singup was successful');
     } on FirebaseAuthException catch (e) {
       String message = "";
       if (e.code == 'weak-password') {
@@ -45,28 +45,28 @@ class AuthFirebaseServiceImpl implements AuthFirebaseService {
       } else if (e.code == 'email-already-in-use') {
         message = 'The account already exists for that email.';
       }
-      return Left(message);
+      return DataError(Exception(message));
     }
   }
 
   @override
-  Future<Either> getAges() async {
+  Future<DataState> getAges() async {
     try {
       var data = await FirebaseFirestore.instance.collection('Ages').get();
-      return Right(data.docs);
+      return DataSuccess(data.docs);
     } catch (e) {
-      return Left(e.toString());
+      return DataError(Exception(e.toString()));
     }
   }
 
   @override
-  Future<Either> signin(SigninUserReq userModel) async {
+  Future<DataState> signin(SigninUserReq userModel) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
         email: userModel.email,
         password: userModel.password!,
       );
-      return const Right("Signin was successful");
+      return const DataSuccess("Signin was successful");
     } on FirebaseAuthException catch (e) {
       String message = "";
       if (e.code == 'user-not-found') {
@@ -74,17 +74,17 @@ class AuthFirebaseServiceImpl implements AuthFirebaseService {
       } else if (e.code == 'wrong-password') {
         message = 'Wrong password provided for that user.';
       }
-      return Left(message);
+      return DataError(Exception(message));
     }
   }
 
   @override
-  Future<Either> sendPasswordResetEmail(String email) async {
+  Future<DataState> sendPasswordResetEmail(String email) async {
     try {
       _firebaseAuth.sendPasswordResetEmail(email: email);
-      return const Right("Email sent successfully");
+      return const DataSuccess("Email sent successfully");
     } catch (e) {
-      return Left(e.toString());
+      return DataError(Exception(e.toString()));
     }
   }
 
@@ -98,7 +98,7 @@ class AuthFirebaseServiceImpl implements AuthFirebaseService {
   }
 
   @override
-  Future<Either> getUser() async {
+  Future<DataState> getUser() async {
     var currentUser = _firebaseAuth.currentUser;
     var userData = await _firebaseFirestore
         .collection('Users')
@@ -109,9 +109,9 @@ class AuthFirebaseServiceImpl implements AuthFirebaseService {
         .then((value) => value.data());
 
     try {
-      return Right(userData);
+      return DataSuccess(userData);
     } catch (e) {
-      return const Left('Please try again');
+      return DataError(Exception('Please try again'));
     }
   }
 }

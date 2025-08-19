@@ -1,11 +1,11 @@
-import 'package:dartz/dartz.dart';
+import 'package:ecomerce/core/resource/data_state.dart';
 import 'package:ecomerce/core/usecase/usecase.dart';
 import 'package:ecomerce/features/auth/domain/repository/auth_repository.dart';
 import 'package:ecomerce/service_locator.dart';
 
-class SendPasswordResetEmailUseCase implements Usecase<Either, String> {
+class SendPasswordResetEmailUseCase implements Usecase<DataState, String> {
   @override
-  Future<Either> call(String? params) async {
+  Future<DataState> call(String? params) async {
     return await sl<AuthRepository>().sendPasswordResetEmail(params!);
   }
 }
